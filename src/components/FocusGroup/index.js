@@ -21,24 +21,40 @@ class FocusGroup extends Component {
     this.state = { ...INITIAL_STATE }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     let myId = this.props.match.params.groupId
-    this.setState({
-      loading: true,
-      name: myId,
-      longName: GROUPS[myId].longName,
-      hosts: GROUPS[myId].hosts,
-      blocks: [...GROUPS[myId].blocks, 'unscheduled'],
-      talks: this.props.firebase.getBlockTalks(myId, [
+    let talks = {}
+    try {
+      let talks = await this.props.firebase.getBlockTalks(myId, [
         ...GROUPS[myId].blocks,
         'unscheduled',
-      ]),
-    })
+      ])
+      console.log(talks)
+      this.setState({
+        loading: true,
+        name: myId,
+        longName: GROUPS[myId].longName,
+        hosts: GROUPS[myId].hosts,
+        blocks: [...GROUPS[myId].blocks, 'unscheduled'],
+        talks: talks,
+      })
+    } catch (error) {
+      console.error(error)
+      this.setState({
+        loading: true,
+        name: myId,
+        longName: GROUPS[myId].longName,
+        hosts: GROUPS[myId].hosts,
+        blocks: [...GROUPS[myId].blocks, 'unscheduled'],
+        talks: talks,
+      })
+    }
+
+    console.log('component did mount ran')
   }
 
   render() {
-    //console.log('state:', this.state)
-
+    console.log('state:', this.state)
     return (
       <div>
         <h1>{this.state.name}</h1>
@@ -72,20 +88,28 @@ const oneBlockComponentPublic = (block = '', talks = []) => {
       <table>
         <tbody>
           <tr>
-            <th>Title</th>
             <th>Presenter</th>
+            <th>Title</th>
+            <th></th>
           </tr>
           {talks.length > 0 &&
-            talks.map((talk) => (
-              <tr>
-                <td>{talk.title}</td>
-                <td>{talk.name}</td>
-              </tr>
-            ))}
-
-          {!talks.length && <p>No talks here!</p>}
+            talks.map((talk) => {
+              console.log(talk)
+              return (
+                <tr>
+                  <td>{talk.name}</td>
+                  <td>{talk.title}</td>
+                  {talk.file ? (
+                    <td>{<a href={talk.url}>Download</a>}</td>
+                  ) : (
+                    <td></td>
+                  )}
+                </tr>
+              )
+            })}
         </tbody>
       </table>
+      {talks.length === 0 && <p>No talks here!</p>}
     </div>
   )
 }

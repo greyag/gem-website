@@ -80,6 +80,7 @@ class Firebase {
       })
       //console.log(storeRef)
       data['file'] = storeRef.location.path_
+      data['done'] = false
     }
     this.fs
       .collection('focusGroups')
@@ -113,7 +114,12 @@ class Firebase {
   //     })
   //   })
   // }
-  deleteTalk = (ref) => ref.remove()
+  deleteTalk = (focusGroup, block, talkid) => {
+    let ref = this.fs(
+      `focusGroups/${focusGroup}/blocks/${block}/talks/${talkid}`
+    )
+    ref.remove()
+  }
 
   // updateBlock(focusGroup, blockId, talkId) {
   //   this.fs
@@ -158,22 +164,42 @@ class Firebase {
   //   }
   //   return blocks
   // }
-
-  getBlockTalks = (focusGroup, blocks) => {
-    let talks = {}
-    blocks.forEach(async (block) => {
-      talks[block] = []
+  downloadTalkLink = async (talkPath = '') => {
+    //console.log('in this func')
+    let downloadURL = ''
+    let talkRef = this.store.child(talkPath)
+    const getURL = async (talkRef) => {
       try {
-        let snapshot = await this.fs
-          .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
-          .get()
-        snapshot.forEach((doc) => {
-          talks[block].push(doc.data())
-        })
+        let url = await talkRef.getDownloadURL()
+        downloadURL = url
       } catch (error) {
         console.error(error)
       }
-    })
+    }
+    await getURL(talkRef)
+    return downloadURL
+  }
+
+  getBlockTalks = async (focusGroup, blocks) => {
+    let talks = {}
+    console.log('blocks', blocks)
+    for (let block of blocks) {
+      talks[block] = []
+      try {
+        console.log(block)
+        let snapshot = await this.fs
+          .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
+          .get()
+        for (let doc of snapshot.docs) {
+          let url = doc.data().file
+            ? await this.downloadTalkLink(doc.data().file)
+            : ''
+          talks[block].push({ ...doc.data(), id: doc.id, url })
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
     return talks
   }
   //console.log(focusGroup, block)
