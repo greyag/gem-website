@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/gem-website/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/gem-website/static/js/main.0dcdfa5d.chunk.js",
+    "main.js.map": "/gem-website/static/js/main.0dcdfa5d.chunk.js.map",
+    "runtime-main.js": "/gem-website/static/js/runtime-main.911cda99.js",
+    "runtime-main.js.map": "/gem-website/static/js/runtime-main.911cda99.js.map",
+    "static/js/2.f03ad822.chunk.js": "/gem-website/static/js/2.f03ad822.chunk.js",
+    "static/js/2.f03ad822.chunk.js.map": "/gem-website/static/js/2.f03ad822.chunk.js.map",
+    "index.html": "/gem-website/index.html",
+    "precache-manifest.0441c7d3a188eb8d8edc165dec271972.js": "/gem-website/precache-manifest.0441c7d3a188eb8d8edc165dec271972.js",
+    "service-worker.js": "/gem-website/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/gem-website/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.f03ad822.chunk.js.LICENSE.txt": "/gem-website/static/js/2.f03ad822.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.911cda99.js",
+    "static/js/2.f03ad822.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.0dcdfa5d.chunk.js"
+  ]
+}
