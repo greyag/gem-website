@@ -5,6 +5,7 @@ import { withFirebase } from '../../server/Firebase'
 //import * as ROUTES from '../../constants/routes'
 import { GROUPS } from '../../constants/focusGroups'
 import { AddTalkLink } from '../AddTalk'
+import { DropdownButton, Dropdown } from 'react-bootstrap'
 
 const INITIAL_STATE = {
   name: '',
@@ -29,7 +30,6 @@ class FocusGroup extends Component {
         ...GROUPS[myId].blocks,
         'unscheduled',
       ])
-      console.log(talks)
       this.setState({
         loading: true,
         name: myId,
@@ -37,6 +37,10 @@ class FocusGroup extends Component {
         hosts: GROUPS[myId].hosts,
         blocks: [...GROUPS[myId].blocks, 'unscheduled'],
         talks: talks,
+        removeTalk: (block, talkId) =>
+          this.props.firebase.deleteTalk(myId, block, talkId),
+        moveTalk: (oldBlock, talkId, newBlock) =>
+          this.props.firebase.moveTalk(myId, oldBlock, talkId, newBlock),
       })
     } catch (error) {
       console.error(error)
@@ -49,39 +53,84 @@ class FocusGroup extends Component {
         talks: talks,
       })
     }
-
-    console.log('component did mount ran')
   }
 
   render() {
-    console.log('state:', this.state)
+    //console.log('state:', this.state)
     return (
       <div>
         <h1>{this.state.name}</h1>
         <h3>{this.state.longName}</h3>
         <p>Hosted by {this.state.hosts}</p>
-        {allBlocksComponent(this.state.talks)}
+        {allBlocksComponent(
+          this.state.talks,
+          this.state.removeTalk,
+          this.state.moveTalk
+        )}
         <AddTalkLink groupId={this.state.name} />
       </div>
     )
   }
 }
 
-const allBlocksComponent = (talkObj = {}) => {
-  const times = Object.keys(talkObj)
-
+const allBlocksComponent = (talkObj = {}, removeTalk, moveTalk) => {
+  const blocks = Object.keys(talkObj)
   return (
     <div>
       <h2>Schedule of Talks</h2>
-      {times.map((time) => (
-        <div>{oneBlockComponentPublic(time, talkObj[time])}</div>
+      {blocks.map((block) => (
+        <div>
+          {oneBlockComponentPublic(
+            block,
+            talkObj[block],
+            removeTalk,
+            moveTalk,
+            blocks
+          )}
+        </div>
       ))}
     </div>
   )
 }
 
-const oneBlockComponentPublic = (block = '', talks = []) => {
-  console.log(block, talks)
+const oneBlockComponentPublic = (
+  block = '',
+  talks = [],
+  removeTalk,
+  moveTalk,
+  blocks
+) => {
+  const RemoveButton = (handleClickFunc) => (
+    <button onClick={handleClickFunc}>Remove</button>
+  )
+
+  const handleMoveClick = (evt, eventKey) => {
+    console.log('event:', evt, eventKey)
+    moveTalk(evt['currentBlock'], evt['talkId'], evt['newBlock'])
+  }
+
+  const MoveButton = (
+    handleSelect = () => {},
+    blocks = [],
+    currentBlock = '',
+    talkId = ''
+  ) => (
+    <DropdownButton title='Move Talk'>
+      {blocks
+        .filter((block) => block !== currentBlock)
+        .map((block) => (
+          <Dropdown.Item
+            as='button'
+            name={block}
+            onClick={(event) => {
+              moveTalk(currentBlock, talkId, event.target.name)
+            }}
+          >
+            {block}
+          </Dropdown.Item>
+        ))}
+    </DropdownButton>
+  )
   return (
     <div>
       <h3>{block}</h3>
@@ -94,7 +143,7 @@ const oneBlockComponentPublic = (block = '', talks = []) => {
           </tr>
           {talks.length > 0 &&
             talks.map((talk) => {
-              console.log(talk)
+              //console.log(talk)
               return (
                 <tr>
                   <td>{talk.name}</td>
@@ -104,6 +153,15 @@ const oneBlockComponentPublic = (block = '', talks = []) => {
                   ) : (
                     <td></td>
                   )}
+                  <td>{RemoveButton(() => removeTalk(block, talk.id))}</td>
+                  <td>
+                    {MoveButton(
+                      () => handleMoveClick(blocks, block, talk.id),
+                      blocks,
+                      block,
+                      talk.id
+                    )}
+                  </td>
                 </tr>
               )
             })}

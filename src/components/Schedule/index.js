@@ -1,70 +1,35 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { compose } from 'recompose'
 //import * as ROLES from '../../constants/roles'
 //import { withAuthorization } from '../Session'
-import { withFirebase } from '../../server/Firebase'
+import { BLOCKS } from '../../constants/blocks'
 
-class SchedulePage extends Component {
-  constructor(props) {
-    super(props)
+const Schedule = () => {
+  let monday = [BLOCKS['monAM'], BLOCKS['monAft'], BLOCKS['monEve']]
+  let tuesday = [BLOCKS['tuesAM'], BLOCKS['tuesAft'], BLOCKS['tuesEve']]
+  let wednesday = [BLOCKS['wedAM'], BLOCKS['wedAft'], BLOCKS['wedEve']]
+  let thursday = [BLOCKS['thurAM'], BLOCKS['thurAft'], BLOCKS['thurEve']]
+  let days = [monday, tuesday, wednesday, thursday]
 
-    this.state = {
-      loading: false,
-      days: {},
-    }
-  }
-
-  // componentDidMount() {
-  //   this.setState({ loading: true })
-  //   this.props.firebase.days().('value', (snapshot) => {
-  //     const daysObject = snapshot.val()
-  //     // const usersList = Object.keys(usersObject).map((key) => ({
-  //     //   ...usersObject[key],
-  //     //   uid: key,
-  //     // }))
-  //     console.log(daysObject)
-  //     this.setState({
-  //       days: daysObject,
-  //       loading: false,
-  //     })
-  //   })
-  // }
-
-  // componentWillUnmount() {
-  //   //this.props.firebase.days()
-  // }
-
-  render() {
-    const { loading } = this.state
-    return (
-      <div>
-        <h1>Schedule</h1>
-        <p>Tschser.</p>
-        {loading && <div>Loading...</div>}
-        {/* <UserList users={users} /> */}
-      </div>
-    )
-  }
+  return (
+    <div>
+      <h1>Schedule</h1>
+      <div>{days.map((day) => Day(day))}</div>
+    </div>
+  )
 }
-
-const UserList = ({ users }) => (
-  <ul>
-    {users.map((user) => (
-      <li key={user.uid}>
-        <span>
-          <strong>ID:</strong> {user.uid}
-        </span>
-        <span>
-          <strong>E-Mail:</strong> {user.email}
-        </span>
-        <span>
-          <strong>Username:</strong> {user.username}
-        </span>
-      </li>
-    ))}
-  </ul>
-)
+const Day = (day) => {
+  console.log(day)
+  return (
+    <div>
+      <h3>{day[0] && day[0].date}</h3>
+    </div>
+  )
+}
+const Block = (block) => {}
 
 //const condition = (authUser) => !!authUser.roles[ROLES.ADMIN]
 
-export default compose(withFirebase)(SchedulePage)
+//export default compose(withFirebase)(SchedulePage)
+
+export default Schedule

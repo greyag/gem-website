@@ -5,7 +5,7 @@ export const GROUPS = {
     blocks: ['tuesAft', 'tuesEve', 'wedEve'],
   },
 
-  M3_I2: {
+  'M3-I2': {
     longName:
       'Merged Modeling & Measurement of Injection Ionospheric Plasma into the Magnetosphre and its Effects',
     hosts: 'Vince Eccles, Barbara Giles, Shasha Zu',
@@ -70,7 +70,7 @@ export const GROUPS = {
     hosts: 'Mike Liemohn, Lutz Rastaetter, Alexa Halford, Josh Rigler',
     blocks: ['wedAft'],
   },
-  Machine_Learning: {
+  'Machine Learning': {
     longName: 'Machine Learning as it pertains in the Geospace Environment',
     hosts: 'Matt Argal',
     blocks: ['thursEve'],

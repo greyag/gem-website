@@ -76,9 +76,8 @@ class Firebase {
         .child(focusGroup)
         .child(file.name)
       storeRef.put(file).then((snapshot) => {
-        //console.log('uploaded file')
+        console.log('uploaded file')
       })
-      //console.log(storeRef)
       data['file'] = storeRef.location.path_
       data['done'] = false
     }
@@ -90,35 +89,44 @@ class Firebase {
       .collection('talks')
       .add(data)
       .then((docRef) => {
-        //console.log('new doc id:', docRef.id)
+        console.log('new doc id:', docRef.id)
       })
       .catch((error) => {
         console.error('Error adding talk:', error)
       })
   }
-  // moveTalkToBlock = (oldRef, newBlock) => {
-  //   oldRef.get().once('value', (snapshot) => {
-  //     let ref = snapshot.ref()
-  //     ref = ref
-  //       .parent() //talks collection
-  //       .parent() //old block doc
-  //       .parent() //blocks collection
-  //       .doc(newBlock)
-  //       .collection(`talks`)
-  //       .doc(oldRef.id)
-  //     ref.set(snapshot.value(), (error) => {
-  //       if (!error) {
-  //         oldRef.remove()
-  //         this.updateBlock(newBlock, oldRef.id)
-  //       } else console.error(error)
-  //     })
-  //   })
-  // }
-  deleteTalk = (focusGroup, block, talkid) => {
-    let ref = this.fs(
-      `focusGroups/${focusGroup}/blocks/${block}/talks/${talkid}`
+  moveTalk = async (focusGroup, oldBlock, talkId, newBlock) => {
+    console.log(focusGroup, oldBlock, talkId, newBlock)
+    let oldRef = this.fs.doc(
+      `focusGroups/${focusGroup}/blocks/${oldBlock}/talks/${talkId}`
     )
-    ref.remove()
+    try {
+      let snapshot = await oldRef.get()
+      console.log('oldref', oldRef)
+      let newRef = await oldRef.parent.parent.parent.doc(
+        `${newBlock}/talks/${oldRef.id}`
+      )
+      console.log('newRef', newRef)
+      await newRef.set(await snapshot.data())
+      await oldRef.delete()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  deleteTalk = (focusGroup, block, talkId, file = '') => {
+    let ref = this.fs.doc(
+      `focusGroups/${focusGroup}/blocks/${block}/talks/${talkId}`
+    )
+    console.log(ref)
+    if (file !== '') {
+      let storeRef = this.store.child(file)
+      storeRef.delete()
+    }
+    console.log(ref)
+    ref
+      .delete()
+      .then(() => 'ref successfully delted')
+      .catch((error) => console.error(error))
   }
 
   // updateBlock(focusGroup, blockId, talkId) {
@@ -182,15 +190,23 @@ class Firebase {
 
   getBlockTalks = async (focusGroup, blocks) => {
     let talks = {}
-    console.log('blocks', blocks)
+    //console.log('blocks', blocks)
     for (let block of blocks) {
       talks[block] = []
       try {
-        console.log(block)
-        let snapshot = await this.fs
+        let blocksSnapshot
+        //console.log('beforeAwait', blocksSnapshot)
+        blocksSnapshot = await this.fs
           .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
           .get()
-        for (let doc of snapshot.docs) {
+        // .onSnapshot((snapshot) => {
+        //   console.log('here')
+        //   blocksSnapshot = snapshot
+        //   console.log(blocksSnapshot)
+        // })
+        //console.log('afterAwait', blocksSnapshot)
+        for (let doc of blocksSnapshot.docs) {
+          //console.log(doc)
           let url = doc.data().file
             ? await this.downloadTalkLink(doc.data().file)
             : ''
