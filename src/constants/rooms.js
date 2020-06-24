@@ -1,4 +1,4 @@
-export const rooms = {
+export const ROOMS = {
   room1: 'zoomLink1',
   room2: 'zoomLink2',
   room3: 'zoomLink3',
