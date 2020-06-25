@@ -9,7 +9,7 @@ import { USERNAMES } from './usernames'
 
 const SignInPage = () => (
   <div>
-    <h1>SignIn</h1>
+    <h1>Sign In</h1>
     <SignInForm />
     {/* <SignUpLink />  */}
   </div>
@@ -34,7 +34,7 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(USERNAMES[username.toLowerCase()], password)
       .then(() => {
         this.setState({ ...INITIAL_STATE })
-        this.props.history.push(ROUTES.HOME)
+        this.props.history.push(ROUTES.SCHEDULE)
       })
       .catch((error) => {
         this.setState({ error })

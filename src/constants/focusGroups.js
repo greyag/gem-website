@@ -4,10 +4,9 @@ export const GROUPS = {
     hosts: 'Hyunju Connor, Haje Korth, Gang Lu, Bin Zhang',
     blocks: ['tuesAft', 'tuesEve', 'wedEve'],
   },
-
   'M3-I2': {
     longName:
-      'Merged Modeling & Measurement of Injection Ionospheric Plasma into the Magnetosphre and its Effects',
+      'Merged Modeling and Measurement of Injection Ionospheric Plasma into the Magnetosphre and its Effects',
     hosts: 'Vince Eccles, Barbara Giles, Shasha Zu',
     blocks: ['wedAft', 'wedEve'],
   },

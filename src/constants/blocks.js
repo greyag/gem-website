@@ -1,28 +1,31 @@
 export const BLOCKS = {
   monAM: {
     order: 1,
-    groups: ['studentSession'],
+    groups: ['Student Session'],
     rooms: ['room1'],
     time: '11am-12:30pm Eastern Time',
     date: 'Monday, July 20',
+    name: 'Student Session',
   },
   monAft: {
     order: 2,
-    groups: ['studentSession'],
+    groups: ['Student Session'],
     rooms: ['room1'],
     time: '1pm-2:30pm Eastern Time',
     date: 'Monday, July 20',
+    name: 'Student Session',
   },
   monEve: {
     order: 3,
-    groups: ['studentSession'],
+    groups: ['Student Session'],
     rooms: ['room1'],
     time: '3pm-4:30pm Eastern Time',
     date: 'Monday, July 20',
+    name: 'Student Session',
   },
   tuesAM: {
     order: 4,
-    groups: ['plenary'],
+    groups: ['Plenary'],
     rooms: ['room1'],
     time: '11am-12:30pm Eastern Time',
     name: 'Tuesday Plenary Session',
@@ -33,7 +36,7 @@ export const BLOCKS = {
     groups: ['IEMIT', 'RX', 'RB', 'BSH'],
     rooms: ['room2', 'room3', 'room4', 'room5'],
     time: '1pm-2:30pm Eastern Time',
-    name: 'Tuesday Session 1',
+    name: 'Tuesday Concurrent Session 1',
     date: 'Tuesday, July 21',
   },
   tuesEve: {
@@ -41,7 +44,7 @@ export const BLOCKS = {
     groups: ['IEMIT', 'RX', 'RB', 'BSH'],
     rooms: ['room2', 'room3', 'room4', 'room5'],
     time: '3pm-4:30pm Eastern Time',
-    name: 'Tuesday Session 2',
+    name: 'Tuesday Concurrent Session 2',
     date: 'Tuesday, July 21',
   },
   wedAM: {
@@ -57,7 +60,7 @@ export const BLOCKS = {
     groups: ['M3-I2', 'UMEA', 'IMM', 'DIP'],
     rooms: ['room2', 'room3', 'room4', 'room5'],
     time: '1pm-2:30pm Eastern Time',
-    name: 'Wednesday Session 1',
+    name: 'Wednesday Concurrent Session 1',
     date: 'Wednesday, July 22',
   },
   wedEve: {
@@ -65,7 +68,7 @@ export const BLOCKS = {
     groups: ['M3-I2', 'UMEA', 'IMM', ['IEMIT', 'MMV']],
     rooms: ['room2', 'room3', 'room4', 'room5'],
     time: '3pm-4:30pm Eastern Time',
-    name: 'Tuesday Session 2',
+    name: 'Wednesday Concurrent Session 2',
     date: 'Wednesday, July 22',
   },
   thursAM: {
@@ -81,7 +84,7 @@ export const BLOCKS = {
     groups: ['DAYS', 'DIP', 'CP', 'IHMIC'],
     rooms: ['room2', 'room3', 'room4', 'room5'],
     time: '1pm-2:30pm Eastern Time',
-    name: 'Thursday Session 1',
+    name: 'Thursday Concurrent Session 1',
     date: 'Thursday, July 23',
   },
   thursEve: {
@@ -89,7 +92,7 @@ export const BLOCKS = {
     groups: ['DAYS', 'Machine Learning', ['CP', 'IMM'], 'IHMIC'],
     rooms: ['room2', 'room3', 'room4', 'room5'],
     time: '3pm-4:30pm Eastern Time',
-    name: 'Thursday Session 2',
+    name: 'Thursday Concurrent Session 2',
     date: 'Thursday, July 23',
   },
 }

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
-
-import { withFirebase } from '../../server/Firebase'
 import { withAuthorization } from '../Session'
+import { withFirebase } from '../../server/Firebase'
 import * as ROUTES from '../../constants/routes'
 import * as ROLES from '../../constants/roles'
 

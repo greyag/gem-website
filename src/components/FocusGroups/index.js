@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import { withAuthorization } from '../Session'
+import { compose } from 'recompose'
+
 //import { compose } from 'recompose'
 
 //import { SignUpLink } from '../SignUp'
@@ -17,5 +20,6 @@ const FocusGroupsPage = () => (
     ))}
   </div>
 )
+const condition = (authUser) => !!authUser
 
-export default FocusGroupsPage
+export default compose(withAuthorization(condition))(FocusGroupsPage)
