@@ -1,7 +1,7 @@
 import React from 'react'
 import { AuthUserContext } from '../Session'
 import * as ROLES from '../../constants/roles'
-import { GROUPS } from '../../constants/focusGroups'
+import { GROUPS } from '../../constants/splinterGroups'
 import {
   OneBlockComponentHost,
   OneBlockComponentAttendee,
@@ -11,10 +11,10 @@ const AllBlocksComponent = ({
   //talkObj = {},
   removeTalk,
   moveTalk,
-  focusGroup,
+  splinterGroup,
 }) => {
-  let blocks = GROUPS[focusGroup]
-    ? [...GROUPS[focusGroup].blocks, 'unscheduled']
+  let blocks = GROUPS[splinterGroup]
+    ? [...GROUPS[splinterGroup].blocks, 'unscheduled']
     : []
   return (
     <div>
@@ -32,13 +32,13 @@ const AllBlocksComponent = ({
                     removeTalk={(talkId) => removeTalk(block, talkId)}
                     moveTalk={moveTalk}
                     blocks={blocks}
-                    focusGroup={focusGroup}
+                    splinterGroup={splinterGroup}
                   />
                 ) : (
                   <OneBlockComponentAttendee
                     block={block}
                     //talks={talkObj[block]}
-                    focusGroup={focusGroup}
+                    splinterGroup={splinterGroup}
                   />
                 )
               }}

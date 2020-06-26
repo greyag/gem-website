@@ -67,13 +67,13 @@ class Firebase {
   // }
 
   // ** Talk API **
-  postTalk = async (focusGroup, data, file = null) => {
-    //console.log('postTalk:', focusGroup, data, file)
+  postTalk = async (splinterGroup, data, file = null) => {
+    //console.log('postTalk:', splinterGroup, data, file)
     if (file) {
       //console.log('trying to upload')
       const storeRef = this.store
         .child('talks')
-        .child(focusGroup)
+        .child(splinterGroup)
         .child(file.name)
       storeRef.put(file).then((snapshot) => {
         console.log('uploaded file')
@@ -85,7 +85,7 @@ class Firebase {
     }
     this.fs
       .collection('focusGroups')
-      .doc(focusGroup)
+      .doc(splinterGroup)
       .collection('blocks')
       .doc('unscheduled')
       .collection('talks')
@@ -97,10 +97,10 @@ class Firebase {
         console.error('Error adding talk:', error)
       })
   }
-  moveTalk = async (focusGroup, oldBlock, talkId, newBlock) => {
-    console.log(focusGroup, oldBlock, talkId, newBlock)
+  moveTalk = async (splinterGroup, oldBlock, talkId, newBlock) => {
+    console.log(splinterGroup, oldBlock, talkId, newBlock)
     let oldRef = this.fs.doc(
-      `focusGroups/${focusGroup}/blocks/${oldBlock}/talks/${talkId}`
+      `focusGroups/${splinterGroup}/blocks/${oldBlock}/talks/${talkId}`
     )
     try {
       let snapshot = await oldRef.get()
@@ -115,9 +115,9 @@ class Firebase {
       console.error(error)
     }
   }
-  deleteTalk = (focusGroup, block, talkId, file = '') => {
+  deleteTalk = (splinterGroup, block, talkId, file = '') => {
     let ref = this.fs.doc(
-      `focusGroups/${focusGroup}/blocks/${block}/talks/${talkId}`
+      `focusGroups/${splinterGroup}/blocks/${block}/talks/${talkId}`
     )
     console.log(ref)
     if (file !== '') {
@@ -131,10 +131,17 @@ class Firebase {
       .catch((error) => console.error(error))
   }
 
-  // updateBlock(focusGroup, blockId, talkId) {
+  setCompleted = (splinterGroup, block, talkId, completed = false) => {
+    const docRef = this.fs.doc(
+      `/focusGroups/${splinterGroup}/blocks/${block}/talks/${talkId}`
+    )
+    docRef.update({ done: completed })
+  }
+
+  // updateBlock(splinterGroup, blockId, talkId) {
   //   this.fs
   //     .collection(`focusGroups`)
-  //     .doc(focusGroup)
+  //     .doc(splinterGroup)
   //     .collection('blocks')
   //     .doc(blockId)
   //     .get()
@@ -147,7 +154,7 @@ class Firebase {
   //         data.talkIds.talks.push(talkId)
   //         this.fs
   //           .collection(`focusGroups`)
-  //           .doc(focusGroup)
+  //           .doc(splinterGroup)
   //           .collection('blocks')
   //           .doc(blockId)
   //           .set(data, { merge: true })
@@ -190,7 +197,7 @@ class Firebase {
     return downloadURL
   }
 
-  getBlockTalks = async (focusGroup, blocks) => {
+  getBlockTalks = async (splinterGroup, blocks) => {
     let talks = {}
     //console.log('blocks', blocks)
     for (let block of blocks) {
@@ -199,7 +206,7 @@ class Firebase {
         let blocksSnapshot
         //console.log('beforeAwait', blocksSnapshot)
         blocksSnapshot = await this.fs
-          .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
+          .collection(`focusGroups/${splinterGroup}/blocks/${block}/talks`)
           .get()
         // .onSnapshot((snapshot) => {
         //   console.log('here')
@@ -220,10 +227,10 @@ class Firebase {
     }
     return talks
   }
-  //console.log(focusGroup, block)
+  //console.log(splinterGroup, block)
   // this.fs
   //   .collection('focusGroups')
-  //   .doc(focusGroup)
+  //   .doc(splinterGroup)
   //   .collection('blocks')
   //   .doc(block)
   //   .collection('talks')
@@ -242,7 +249,7 @@ class Firebase {
   //   return
   // }
   // talks = data.talkIds.map((talkId) => {
-  //   return this.getTalk(focusGroup, block, talkId)
+  //   return this.getTalk(splinterGroup, block, talkId)
   // })
 
   getAllTalksForGroup = async (group) => {
@@ -262,11 +269,11 @@ class Firebase {
     return talks
   }
 
-  // getTalk = (focusGroup, block, talkId) => {
+  // getTalk = (splinterGroup, block, talkId) => {
   //   let talk = {}
   //   this.fs
   //     .collection('focusGroups')
-  //     .doc(focusGroup)
+  //     .doc(splinterGroup)
   //     .collection('blocks')
   //     .doc(block)
   //     .collection(`talks`)
@@ -277,10 +284,10 @@ class Firebase {
   //     })
   //   return talk
   // }
-  // moveTalkInBlock = (focusGroup, block, from, to) => {
+  // moveTalkInBlock = (splinterGroup, block, from, to) => {
   //   this.fs
   //     .collection('focusGroups')
-  //     .doc(focusGroup)
+  //     .doc(splinterGroup)
   //     .collection('blocks')
   //     .doc(block)
   //     .get()
@@ -294,7 +301,7 @@ class Firebase {
 
   //       this.fs
   //         .collection('focusGroups')
-  //         .doc(focusGroup)
+  //         .doc(splinterGroup)
   //         .collection('blocks')
   //         .doc(block)
   //         .set(data, { merge: true })

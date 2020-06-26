@@ -8,13 +8,13 @@ import { compose } from 'recompose'
 //import { SignUpLink } from '../SignUp'
 //import { withFirebase } from '../../server/Firebase'
 import * as ROUTES from '../../constants/routes'
-import { GROUPS } from '../../constants/focusGroups'
+import { GROUPS } from '../../constants/splinterGroups'
 
 const FocusGroupsPage = () => (
   <div>
-    <h1>Focus Groups</h1>
+    <h1>Splinter Groups</h1>
     {Object.keys(GROUPS).map((group) => (
-      <div>
+      <div key={group}>
         <Link to={`${ROUTES.FOCUSGROUPS}/${group}`}>
           {GROUPS[group].longName}
         </Link>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withFirebase } from '../../server/Firebase'
 import { compose } from 'recompose'
 import { withAuthorization } from '../Session'
-import { GROUPS } from '../../constants/focusGroups'
+import { GROUPS } from '../../constants/splinterGroups'
 import { AddTalkLink } from '../AddTalk'
 import AllBlocksComponent from './AllBlocksComponent'
 
@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   //loading: false,
 }
 
-class FocusGroup extends Component {
+class SplinterGroup extends Component {
   constructor(props) {
     super(props)
     this.state = { ...INITIAL_STATE }
@@ -64,7 +64,7 @@ class FocusGroup extends Component {
           //talkObj={this.state.talks}
           removeTalk={this.state.removeTalk}
           moveTalk={this.state.moveTalk}
-          focusGroup={this.state.name}
+          splinterGroup={this.state.name}
         />
 
         <AddTalkLink groupId={this.state.name} />
@@ -75,4 +75,7 @@ class FocusGroup extends Component {
 
 const condition = (authUser) => !!authUser
 
-export default compose(withFirebase, withAuthorization(condition))(FocusGroup)
+export default compose(
+  withFirebase,
+  withAuthorization(condition)
+)(SplinterGroup)

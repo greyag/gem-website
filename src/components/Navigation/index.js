@@ -28,7 +28,7 @@ const NavigationAuth = ({ authUser }) => (
       <Link to={ROUTES.SCHEDULE}>Schedule</Link>
     </li>
     <li>
-      <Link to={ROUTES.FOCUSGROUPS}>Focus Groups</Link>
+      <Link to={ROUTES.FOCUSGROUPS}>Splinter Groups</Link>
     </li>
     {!!authUser.roles[ROLES.ADMIN] && (
       <li>
@@ -56,7 +56,7 @@ const NavigationNonAuth = () => (
       <Link to={ROUTES.SCHEDULE}>Schedule</Link>
     </li>
     <li>
-      <Link to={ROUTES.FOCUSGROUPS}>Focus Groups</Link>
+      <Link to={ROUTES.FOCUSGROUPS}>Splinter Groups</Link>
     </li>
   </ul>
 )

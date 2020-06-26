@@ -5,17 +5,18 @@ import { BLOCKS } from '../../constants/blocks'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
 import { Table, Modal, Button } from 'react-bootstrap'
 
-const useTalks = (focusGroup, block, firebase) => {
+const useTalks = (splinterGroup, block, firebase) => {
   const [talks, setTalks] = useState([])
   useEffect(() => {
-    firebase.fs
-      .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
+    const unsubscribe = firebase.fs
+      .collection(`focusGroups/${splinterGroup}/blocks/${block}/talks`)
       .onSnapshot((snapshot) => {
         const newTalks = snapshot.docs.map((doc) => {
           return { ...doc.data(), id: doc.id }
         })
         setTalks(newTalks)
       })
+    return unsubscribe
   }, [])
 
   return talks
@@ -26,12 +27,14 @@ let OneBlockComponentHost = ({
   removeTalk,
   moveTalk,
   blocks,
-  focusGroup,
+  splinterGroup,
   ...props
 }) => {
-  let talks = useTalks(focusGroup, block, props.firebase)
+  let talks = useTalks(splinterGroup, block, props.firebase)
 
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
+
+  const handleCompleteClick = (talk) => {}
 
   const RemoveButton = ({ talk }) => {
     const [showModal, setShowModal] = useState(false)
@@ -103,7 +106,7 @@ let OneBlockComponentHost = ({
     </DropdownButton>
   )
   let zoomLink = BLOCKS[block]
-    ? BLOCKS[block]['rooms'][findIndex(BLOCKS[block].groups, focusGroup)]
+    ? BLOCKS[block]['rooms'][findIndex(BLOCKS[block].groups, splinterGroup)]
     : undefined
 
   return (
@@ -126,7 +129,13 @@ let OneBlockComponentHost = ({
                   <td>{talk.name}</td>
                   <td>{talk.title}</td>
                   {talk.file ? (
-                    <td>{<a href={talk.url}>Download</a>}</td>
+                    <td>
+                      {
+                        <a href={talk.url} download>
+                          Download
+                        </a>
+                      }
+                    </td>
                   ) : (
                     <td> </td>
                   )}
@@ -144,13 +153,13 @@ let OneBlockComponentHost = ({
   )
 }
 
-let OneBlockComponentAttendee = ({ block = '', focusGroup, ...props }) => {
-  const talks = useTalks(focusGroup, block, props.firebase)
+let OneBlockComponentAttendee = ({ block = '', splinterGroup, ...props }) => {
+  const talks = useTalks(splinterGroup, block, props.firebase)
 
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
 
   let zoomLink = BLOCKS[block]
-    ? BLOCKS[block]['rooms'][(findIndex(BLOCKS[block].groups), focusGroup)]
+    ? BLOCKS[block]['rooms'][(findIndex(BLOCKS[block].groups), splinterGroup)]
     : undefined
 
   return (
@@ -180,12 +189,12 @@ let OneBlockComponentAttendee = ({ block = '', focusGroup, ...props }) => {
   )
 }
 
-const findIndex = (groupsArr, focusGroup) => {
+const findIndex = (groupsArr, splinterGroup) => {
   let index = groupsArr.reduce((accum, curr, ind) => {
-    if (curr === focusGroup) {
+    if (curr === splinterGroup) {
       return ind
     } else if (typeof curr !== 'string') {
-      if (curr.indexOf(focusGroup) > -1) return ind
+      if (curr.indexOf(splinterGroup) > -1) return ind
     } else {
       return accum
     }

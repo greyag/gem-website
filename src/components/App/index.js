@@ -8,8 +8,8 @@ import SignInPage from '../SignIn'
 //import HomePage from '../Home'
 //import AdminPage from '../Admin'
 import Schedule from '../Schedule'
-import FocusGroups from '../FocusGroups'
-import FocusGroup from '../FocusGroup'
+import SplinterGroups from '../SplinterGroups'
+import SplinterGroup from '../SplinterGroup'
 import AddTalkPage from '../AddTalk'
 import * as ROUTES from '../../constants/routes'
 import { withAuthentication } from '../Session'
@@ -25,8 +25,8 @@ const App = () => (
         <Route path={ROUTES.SCHEDULE} component={Schedule} />
         {/* <Route path={ROUTES.HOME} component={HomePage} /> */}
         {/* <Route path={ROUTES.ADMIN} component={AdminPage} /> */}
-        <Route exact path={ROUTES.FOCUSGROUPS} component={FocusGroups} />
-        <Route exact path='/focusgroups/:groupId' component={FocusGroup} />
+        <Route exact path={ROUTES.FOCUSGROUPS} component={SplinterGroups} />
+        <Route exact path='/focusgroups/:groupId' component={SplinterGroup} />
         <Route exact path='/focusgroups/:groupId/add' component={AddTalkPage} />
       </Switch>
     </div>

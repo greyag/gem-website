@@ -4,7 +4,7 @@ import { withAuthorization } from '../Session'
 //import * as ROLES from '../../constants/roles'
 import { BLOCKS } from '../../constants/blocks'
 import { ROOMS } from '../../constants/rooms'
-import { GROUPS } from '../../constants/focusGroups'
+import { GROUPS } from '../../constants/splinterGroups'
 import { Table } from 'react-bootstrap'
 
 // import { Link, withRouter } from 'react-router-dom'
@@ -34,7 +34,7 @@ const Day = ({ blocks }) => {
       <thead>
         <tr>
           <th>Time</th>
-          <th>Focus Group</th>
+          <th>Splinter Group</th>
           <th>More Info</th>
           <th>Zoom Link</th>
         </tr>
