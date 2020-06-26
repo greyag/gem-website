@@ -55,7 +55,7 @@ class AddTalkForm extends Component {
     console.log('state', this.state)
     return (
       <div>
-        <h1>Add a new {groupId} talk</h1>
+        <h3>Add a new {groupId} talk</h3>
         <form onSubmit={this.onSubmit}>
           <input
             name='name'

@@ -15,7 +15,9 @@ const FocusGroupsPage = () => (
     <h1>Focus Groups</h1>
     {Object.keys(GROUPS).map((group) => (
       <div>
-        <Link to={`${ROUTES.FOCUSGROUPS}/${group}`}>{group}</Link>
+        <Link to={`${ROUTES.FOCUSGROUPS}/${group}`}>
+          {GROUPS[group].longName}
+        </Link>
       </div>
     ))}
   </div>

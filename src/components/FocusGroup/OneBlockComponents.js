@@ -1,17 +1,46 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { withFirebase } from '../../server/Firebase'
+import { compose } from 'recompose'
 import { BLOCKS } from '../../constants/blocks'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
 import { Table, Modal, Button } from 'react-bootstrap'
 
-const OneBlockComponentHost = ({
+let OneBlockComponentHost = ({
   block = '',
-  talks = [],
   removeTalk,
   moveTalk,
   blocks,
   focusGroup,
+  ...props
 }) => {
   const [showModal, setShowModal] = useState(false)
+  const [talks, setTalks] = useState([])
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = props.firebase.fs
+      .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
+      .onSnapshot(
+        (snapshot) => {
+          let talks = []
+          snapshot.forEach(async (doc) => {
+            let url = doc.data().file
+              ? await this.downloadTalkLink(doc.data().file)
+              : ''
+            talks.push({ ...doc.data(), id: doc.id, url })
+          })
+          setLoading(false)
+          setTalks(talks)
+        },
+        (err) => {
+          setError(err)
+        }
+      )
+
+    return () => unsubscribe()
+  })
+
   const handleToggle = () => setShowModal(!showModal)
 
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
@@ -87,6 +116,8 @@ const OneBlockComponentHost = ({
     ? BLOCKS[block]['rooms'][findIndex(BLOCKS[block].groups, focusGroup)]
     : undefined
 
+  console.log(talks)
+
   return (
     <div>
       <h3>{blockLongName}</h3>
@@ -133,7 +164,7 @@ const OneBlockComponentHost = ({
   )
 }
 
-const OneBlockComponentAttendee = ({ block = '', talks = [], focusGroup }) => {
+let OneBlockComponentAttendee = ({ block = '', talks = [], focusGroup }) => {
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
 
   let zoomLink = BLOCKS[block]
@@ -179,5 +210,8 @@ const findIndex = (groupsArr, focusGroup) => {
   }, -1)
   return index
 }
+
+OneBlockComponentHost = compose(withFirebase)(OneBlockComponentHost)
+OneBlockComponentAttendee = compose(withFirebase)(OneBlockComponentAttendee)
 
 export { OneBlockComponentHost, OneBlockComponentAttendee }
