@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { withFirebase } from '../../server/Firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
 import { compose } from 'recompose'
 import { BLOCKS } from '../../constants/blocks'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
 import { Table, Modal, Button } from 'react-bootstrap'
 
-// const useTalks = (focusGroup, block, firebase) => {
-//   const [talks, setTalks] = useState([])
+const useTalks = (focusGroup, block, firebase) => {
+  const [talks, setTalks] = useState([])
+  useEffect(() => {
+    firebase.fs
+      .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
+      .onSnapshot((snapshot) => {
+        const newTalks = snapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id }
+        })
+        setTalks(newTalks)
+      })
+  }, [])
 
-//   useEffect(() => {
-//     firebase.fs.collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
-//   }, [])
-
-//   return talks
-// }
+  return talks
+}
 
 let OneBlockComponentHost = ({
   block = '',
@@ -24,36 +29,11 @@ let OneBlockComponentHost = ({
   focusGroup,
   ...props
 }) => {
-  //const talks = useTalks()
-
-  const [talks, setTalks] = useState([])
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const unsubscribe = props.firebase.fs
-      .collection(`focusGroups/${focusGroup}/blocks/${block}/talks`)
-      .onSnapshot(
-        (snapshot) => {
-          let talks = []
-          snapshot.forEach((doc) => {
-            talks.push({ ...doc.data(), id: doc.id })
-          })
-          setLoading(false)
-          setTalks(talks)
-        },
-        (err) => {
-          setError(err)
-        }
-      )
-
-    return () => unsubscribe()
-  }, [focusGroup, block, props.firebase.fs])
+  let talks = useTalks(focusGroup, block, props.firebase)
 
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
 
   const RemoveButton = ({ talk }) => {
-    console.log('removeButton', talk)
     const [showModal, setShowModal] = useState(false)
     const handleToggle = () => setShowModal(!showModal)
     return (
@@ -85,7 +65,6 @@ let OneBlockComponentHost = ({
           <Modal.Footer>
             <Button
               onClick={() => {
-                console.log(talk)
                 handleToggle()
               }}
             >
@@ -126,7 +105,7 @@ let OneBlockComponentHost = ({
   let zoomLink = BLOCKS[block]
     ? BLOCKS[block]['rooms'][findIndex(BLOCKS[block].groups, focusGroup)]
     : undefined
-  console.log(block, talks)
+
   return (
     <div>
       <h3>{blockLongName}</h3>
@@ -165,7 +144,9 @@ let OneBlockComponentHost = ({
   )
 }
 
-let OneBlockComponentAttendee = ({ block = '', talks = [], focusGroup }) => {
+let OneBlockComponentAttendee = ({ block = '', focusGroup, ...props }) => {
+  const talks = useTalks(focusGroup, block, props.firebase)
+
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
 
   let zoomLink = BLOCKS[block]
@@ -177,7 +158,7 @@ let OneBlockComponentAttendee = ({ block = '', talks = [], focusGroup }) => {
       <h3>{blockLongName}</h3>
       <h4>{BLOCKS[block] && BLOCKS[block].time}</h4>
       <h6>{zoomLink && <a href={`${zoomLink}`}>Zoom Link</a>}</h6>
-      <table>
+      <Table>
         <tbody>
           <tr>
             <th>Presenter</th>
@@ -193,7 +174,7 @@ let OneBlockComponentAttendee = ({ block = '', talks = [], focusGroup }) => {
               )
             })}
         </tbody>
-      </table>
+      </Table>
       {talks.length === 0 && <p>No talks here!</p>}
     </div>
   )
