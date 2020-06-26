@@ -13,7 +13,6 @@ const AllBlocksComponent = ({
   moveTalk,
   focusGroup,
 }) => {
-  console.log(GROUPS[focusGroup])
   let blocks = GROUPS[focusGroup]
     ? [...GROUPS[focusGroup].blocks, 'unscheduled']
     : []
@@ -30,7 +29,7 @@ const AllBlocksComponent = ({
                   <OneBlockComponentHost
                     block={block}
                     //talks={talkObj[block]}
-                    removeTalk={removeTalk}
+                    removeTalk={(talkId) => removeTalk(block, talkId)}
                     moveTalk={moveTalk}
                     blocks={blocks}
                     focusGroup={focusGroup}

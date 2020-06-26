@@ -2,14 +2,13 @@ import React from 'react'
 import { compose } from 'recompose'
 import { withAuthorization } from '../Session'
 //import * as ROLES from '../../constants/roles'
-//import { withAuthorization } from '../Session'
 import { BLOCKS } from '../../constants/blocks'
 import { ROOMS } from '../../constants/rooms'
 import { GROUPS } from '../../constants/focusGroups'
 import { Table } from 'react-bootstrap'
 
-import { Link, withRouter } from 'react-router-dom'
-import { CardBody } from 'react-bootstrap/Card'
+// import { Link, withRouter } from 'react-router-dom'
+// import { CardBody } from 'react-bootstrap/Card'
 
 const Schedule = () => {
   let monday = [BLOCKS['monAM'], BLOCKS['monAft'], BLOCKS['monEve']]

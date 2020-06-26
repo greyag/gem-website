@@ -67,7 +67,7 @@ class Firebase {
   // }
 
   // ** Talk API **
-  postTalk = (focusGroup, data, file = null) => {
+  postTalk = async (focusGroup, data, file = null) => {
     //console.log('postTalk:', focusGroup, data, file)
     if (file) {
       //console.log('trying to upload')
@@ -79,6 +79,8 @@ class Firebase {
         console.log('uploaded file')
       })
       data['file'] = storeRef.location.path_
+      let url = await storeRef.getDownloadURL()
+      data['url'] = url
       data['done'] = false
     }
     this.fs
