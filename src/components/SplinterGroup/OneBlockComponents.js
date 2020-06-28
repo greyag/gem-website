@@ -34,7 +34,9 @@ let OneBlockComponentHost = ({
 
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
 
-  const handleCompleteClick = (talk) => {}
+  const handleCompleteClick = (talk) => {
+    props.firebase.setCompleted(splinterGroup, block, talk.id, !talk.done)
+  }
 
   const RemoveButton = ({ talk }) => {
     const [showModal, setShowModal] = useState(false)
@@ -119,6 +121,10 @@ let OneBlockComponentHost = ({
           <tr>
             <th>Presenter</th>
             <th>Title</th>
+            <th>Completed</th>
+            <th>Download Link</th>
+            <th></th>
+            {block === 'unscheduled' && <th></th>}
           </tr>
         </thead>
         <tbody>
@@ -128,6 +134,7 @@ let OneBlockComponentHost = ({
                 <tr key={talk.id}>
                   <td>{talk.name}</td>
                   <td>{talk.title}</td>
+                  <td> </td>
                   {talk.file ? (
                     <td>
                       {
@@ -139,6 +146,7 @@ let OneBlockComponentHost = ({
                   ) : (
                     <td> </td>
                   )}
+
                   <td>{MoveButton(blocks, block, talk.id)}</td>
                   <td>
                     {block === 'unscheduled' && <RemoveButton talk={talk} />}

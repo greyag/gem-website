@@ -69,33 +69,34 @@ class Firebase {
   // ** Talk API **
   postTalk = async (splinterGroup, data, file = null) => {
     //console.log('postTalk:', splinterGroup, data, file)
-    if (file) {
-      //console.log('trying to upload')
-      const storeRef = this.store
-        .child('talks')
-        .child(splinterGroup)
-        .child(file.name)
-      storeRef.put(file).then((snapshot) => {
+    try {
+      if (file) {
+        console.log('trying to upload')
+        const storeRef = this.store
+          .child('talks')
+          .child(splinterGroup)
+          .child(file.name)
+        await storeRef.put(file)
         console.log('uploaded file')
-      })
-      data['file'] = storeRef.location.path_
-      let url = await storeRef.getDownloadURL()
-      data['url'] = url
-      data['done'] = false
+        data['file'] = storeRef.location.path_
+        let url = await storeRef.getDownloadURL()
+        data['url'] = url
+        data['done'] = false
+      }
+      let docRef = await this.fs
+        .collection('focusGroups')
+        .doc(splinterGroup)
+        .collection('blocks')
+        .doc('unscheduled')
+        .collection('talks')
+        .add(data)
+        .then((docRef) => {
+          console.log('new doc id:', docRef.id)
+        })
+      console.log(docRef)
+    } catch (error) {
+      console.error(error)
     }
-    this.fs
-      .collection('focusGroups')
-      .doc(splinterGroup)
-      .collection('blocks')
-      .doc('unscheduled')
-      .collection('talks')
-      .add(data)
-      .then((docRef) => {
-        console.log('new doc id:', docRef.id)
-      })
-      .catch((error) => {
-        console.error('Error adding talk:', error)
-      })
   }
   moveTalk = async (splinterGroup, oldBlock, talkId, newBlock) => {
     console.log(splinterGroup, oldBlock, talkId, newBlock)

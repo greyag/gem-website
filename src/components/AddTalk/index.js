@@ -32,7 +32,7 @@ class AddTalkForm extends Component {
   onSubmit = (event) => {
     console.log('submit!')
     const { name, title, groupId, selectedFile } = this.state
-    this.state.postTalk(groupId, { name, title }, selectedFile)
+    this.props.firebase.postTalk(groupId, { name, title }, selectedFile)
     this.props.history.push(`/focusgroups/${this.state.groupId}`)
     event.preventDefault()
   }
