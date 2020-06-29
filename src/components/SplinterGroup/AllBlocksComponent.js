@@ -16,6 +16,7 @@ const AllBlocksComponent = ({
   let blocks = GROUPS[splinterGroup]
     ? [...GROUPS[splinterGroup].blocks, 'unscheduled']
     : []
+  console.log('blocks:', blocks)
   return (
     <div>
       <h2>Schedule of Talks</h2>

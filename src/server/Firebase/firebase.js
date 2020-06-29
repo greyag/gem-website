@@ -83,7 +83,7 @@ class Firebase {
         data['url'] = url
         data['done'] = false
       }
-      let docRef = await this.fs
+      await this.fs
         .collection('focusGroups')
         .doc(splinterGroup)
         .collection('blocks')
@@ -93,11 +93,11 @@ class Firebase {
         .then((docRef) => {
           console.log('new doc id:', docRef.id)
         })
-      console.log(docRef)
     } catch (error) {
       console.error(error)
     }
   }
+
   moveTalk = async (splinterGroup, oldBlock, talkId, newBlock) => {
     console.log(splinterGroup, oldBlock, talkId, newBlock)
     let oldRef = this.fs.doc(

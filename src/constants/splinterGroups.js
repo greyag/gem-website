@@ -38,7 +38,7 @@ export const GROUPS = {
       'Dayside Kinetic Processes in Global Solar Wind- Magnetosphere Interaction',
     hosts:
       'Heli Hietala, Xochitl Blanco-Cano, Gabor Toth, Andrew Dimmock, Ying Zou',
-    blocks: ['thursAft', 'ThursEve'],
+    blocks: ['thursAft', 'thursEve'],
   },
   RB: {
     longName:

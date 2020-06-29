@@ -35,7 +35,7 @@ const Day = ({ blocks }) => {
         <tr>
           <th>Time</th>
           <th>Splinter Group</th>
-          <th>More Info</th>
+          {/* <th>More Info</th> */}
           <th>Zoom Link</th>
         </tr>
       </thead>
@@ -46,12 +46,12 @@ const Day = ({ blocks }) => {
         <tr key={ind}>
           <td>{block.time}</td>
           <td>{block.name}</td>
-          <td>
+          {/* <td>
             {(block.name.includes('Plenary') ||
               block.name.includes('Student')) && (
               <a href={`/focusgroup/${block.name}`}>More Info</a>
             )}
-          </td>
+          </td> */}
           <td>
             {(block.name.includes('Plenary') ||
               block.name.includes('Student')) && (
@@ -66,11 +66,22 @@ const Day = ({ blocks }) => {
             <tr key={block.name + group}>
               <td></td>
               <td>
-                {typeof group === 'string'
-                  ? GROUPS[group].longName
-                  : group.map((group) => GROUPS[group].longName).join('\n & ')}
+                {typeof group === 'string' ? (
+                  <a href={`/focusGroups/${group}`}>{GROUPS[group].longName}</a>
+                ) : (
+                  <div>
+                    Joint Session
+                    {group.map((group) => (
+                      <p>
+                        <a href={`/focusGroups/${group}`}>
+                          {GROUPS[group].longName}
+                        </a>
+                      </p>
+                    ))}
+                  </div>
+                )}
               </td>
-              <td>
+              {/* <td>
                 {typeof group === 'string' ? (
                   <a href={`/focusGroups/${group}`}>More Info</a>
                 ) : (
@@ -80,7 +91,7 @@ const Day = ({ blocks }) => {
                     </a>
                   ))
                 )}
-              </td>
+              </td> */}
               <td>
                 <a href={ROOMS[block.rooms[ind]]}>Zoom Link</a>
               </td>
