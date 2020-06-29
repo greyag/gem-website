@@ -30,8 +30,11 @@ class SignInFormBase extends Component {
 
   onSubmit = (event) => {
     const { username, password } = this.state
+    const un = USERNAMES[username.toLowerCase()]
+      ? USERNAMES[username.toLowerCase()]
+      : username + '@gmail.com'
     this.props.firebase
-      .doSignInWithEmailAndPassword(USERNAMES[username.toLowerCase()], password)
+      .doSignInWithEmailAndPassword(un, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE })
         this.props.history.push(ROUTES.SCHEDULE)
@@ -39,7 +42,6 @@ class SignInFormBase extends Component {
       .catch((error) => {
         this.setState({ error })
       })
-
     event.preventDefault()
   }
 

@@ -269,7 +269,6 @@ ul.navl a:focus {
 }
 
 /*--------DROP DOWN MENUS---------*/
-
 #menuwrapper {
   width: /*790px*/ 1000px;
   background-color: #39c;
@@ -332,7 +331,7 @@ ul.navl a:focus {
   border-top: 1px solid black;
 }
 
-#sddmdiv: hover a {
+#sddmdiv:hover a {
   background: #3cf;
   border: 1px solid black;
   color: white;
