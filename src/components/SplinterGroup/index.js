@@ -58,7 +58,8 @@ class SplinterGroup extends Component {
     return (
       <div>
         <h1>{this.state.longName}</h1>
-        <p>Hosted by {this.state.hosts}</p>
+        <p>Hosted by: {this.state.hosts}</p>
+        <AddTalkLink groupId={this.state.name} />
 
         <AllBlocksComponent
           //talkObj={this.state.talks}

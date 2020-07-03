@@ -6,6 +6,7 @@ import { compose } from 'recompose'
 import { withFirebase } from '../../server/Firebase'
 import * as ROUTES from '../../constants/routes'
 import { USERNAMES } from './usernames'
+import { Form, Button } from 'react-bootstrap'
 
 const SignInPage = () => (
   <div>
@@ -53,6 +54,32 @@ class SignInFormBase extends Component {
     const { username, password, error } = this.state
 
     const isInvalid = password === '' || username === ''
+    // return (
+    //   <Form>
+    //     <Form.Group controlId='formBasicEmail'>
+    //       <Form.Label>Username</Form.Label>
+    //       <Form.Control
+    //         type='username'
+    //         placeholder='Username'
+    //         // value={username}
+    //         // onChange={this.onChange}
+    //       />
+    //     </Form.Group>
+
+    //     <Form.Group controlId='formBasicPassword'>
+    //       <Form.Label>Password</Form.Label>
+    //       <Form.Control
+    //         type='password'
+    //         placeholder='Password'
+    //         // value={password}
+    //         // onChange={this.onChange}
+    //       />
+    //     </Form.Group>
+    //     <Button variant='primary' type='submit'>
+    //       Submit
+    //     </Button>
+    //   </Form>
+    // )
 
     return (
       <form onSubmit={this.onSubmit}>

@@ -4,6 +4,7 @@ import { compose } from 'recompose'
 import { BLOCKS } from '../../constants/blocks'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
 import { Table, Modal, Button } from 'react-bootstrap'
+import { GROUPS } from '../../constants/splinterGroups'
 
 const useTalks = (splinterGroup, block, firebase) => {
   const [talks, setTalks] = useState([])
@@ -115,7 +116,19 @@ let OneBlockComponentHost = ({
     <div>
       <h3>{blockLongName}</h3>
       <h4>{BLOCKS[block] && BLOCKS[block].time}</h4>
-      <h6>{zoomLink && <a href={`${zoomLink}`}>Zoom Link</a>}</h6>
+      <h6>
+        {zoomLink && <a href={`${zoomLink}`}>Zoom Link</a>} {' | '}
+        {GROUPS[splinterGroup] && GROUPS[splinterGroup].slack && (
+          <a
+            target='_blank'
+            rel='noreferrer'
+            href={'http://' + GROUPS[splinterGroup].slack}
+          >
+            Slack Link
+          </a>
+        )}
+      </h6>
+
       <Table>
         <thead>
           <tr>

@@ -47,7 +47,7 @@ a img {
 
 /* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
 a:link {
-  color: #0000ff;
+  color: #666666;
   text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
 }
 a:visited {
@@ -82,11 +82,11 @@ a.black {
 
 /* ~~ The header is not given a width. It will extend the full width of your layout. It contains an image placeholder that should be replaced with your own linked logo. ~~ */
 .header {
-  width: 996px;
+  width: 998px;
   height: 249px;
   margin: 0 auto;
   background: white;
-  background-image: url('./imgs/gemHeader.png');
+  background-image: url('./imgs/gemHeader.jpg');
   border: 2px solid #000;
   margin: 0px 0px 10px 0px;
 }

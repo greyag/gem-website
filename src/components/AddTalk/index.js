@@ -5,6 +5,7 @@ import { withAuthorization } from '../Session'
 import { withFirebase } from '../../server/Firebase'
 import * as ROUTES from '../../constants/routes'
 import * as ROLES from '../../constants/roles'
+import { Button } from 'react-bootstrap'
 
 const INITIAL_STATE = {
   groupId: '',
@@ -90,9 +91,11 @@ class AddTalkForm extends Component {
 
 const AddTalkLink = ({ groupId }) => {
   return (
-    <p>
-      <Link to={{ pathname: `/focusgroups/${groupId}/add` }}>Add a talk!</Link>
-    </p>
+    <Link to={{ pathname: `/focusgroups/${groupId}/add` }}>
+      <Button type='button' variant='success'>
+        Add a talk!
+      </Button>
+    </Link>
   )
 }
 

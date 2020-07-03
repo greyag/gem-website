@@ -12,7 +12,7 @@ import { GROUPS } from '../../constants/splinterGroups'
 
 const FocusGroupsPage = () => (
   <div>
-    <h1>Splinter Groups</h1>
+    <h1>Focus Groups</h1>
     {Object.keys(GROUPS).map((group) => (
       <div key={group}>
         <Link to={`${ROUTES.FOCUSGROUPS}/${group}`}>

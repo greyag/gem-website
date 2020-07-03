@@ -19,7 +19,6 @@ const AllBlocksComponent = ({
   console.log('blocks:', blocks)
   return (
     <div>
-      <h2>Schedule of Talks</h2>
       {blocks.map((block) => {
         return (
           <div key={block}>
@@ -29,7 +28,6 @@ const AllBlocksComponent = ({
                 return authUser && authUser.roles.HOST === ROLES.HOST ? (
                   <OneBlockComponentHost
                     block={block}
-                    //talks={talkObj[block]}
                     removeTalk={(talkId) => removeTalk(block, talkId)}
                     moveTalk={moveTalk}
                     blocks={blocks}

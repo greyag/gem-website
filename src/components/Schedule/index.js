@@ -11,7 +11,7 @@ import { Table } from 'react-bootstrap'
 // import { CardBody } from 'react-bootstrap/Card'
 
 const Schedule = () => {
-  let monday = [BLOCKS['monAM'], BLOCKS['monAft'], BLOCKS['monEve']]
+  let monday = [BLOCKS['monAM']]
   let tuesday = [BLOCKS['tuesAM'], BLOCKS['tuesAft'], BLOCKS['tuesEve']]
   let wednesday = [BLOCKS['wedAM'], BLOCKS['wedAft'], BLOCKS['wedEve']]
   let thursday = [BLOCKS['thursAM'], BLOCKS['thursAft'], BLOCKS['thursEve']]
@@ -33,10 +33,11 @@ const Day = ({ blocks }) => {
     let head = (
       <thead>
         <tr>
-          <th>Time</th>
-          <th>Splinter Group</th>
-          {/* <th>More Info</th> */}
-          <th>Zoom Link</th>
+          <th style={{ width: 180 }}>Time (Eastern Time)</th>
+          <th></th>
+          {!blocks[0].date.includes('Monday') && (
+            <th style={{ width: 100 }}>Zoom Link</th>
+          )}
         </tr>
       </thead>
     )
@@ -45,29 +46,41 @@ const Day = ({ blocks }) => {
       body.push(
         <tr key={ind}>
           <td>{block.time}</td>
-          <td>{block.name}</td>
-          {/* <td>
-            {(block.name.includes('Plenary') ||
-              block.name.includes('Student')) && (
-              <a href={`/focusgroup/${block.name}`}>More Info</a>
-            )}
-          </td> */}
-          <td>
-            {(block.name.includes('Plenary') ||
-              block.name.includes('Student')) && (
-              <a href={`${ROOMS[block.rooms[0]]}`}>Zoom Link</a>
-            )}
-          </td>
+          {block.name.includes('Student') ? (
+            <td>
+              <a href='/student'>{block.name}</a>
+            </td>
+          ) : (
+            <td>{block.name}</td>
+          )}
+          {!block.name.includes('Student') && (
+            <td>
+              {block.name.includes('Plenary') && (
+                <a
+                  target='_blank'
+                  rel='noreferrer'
+                  href={`${ROOMS[block.rooms[0]]}`}
+                >
+                  Zoom Link
+                </a>
+              )}
+            </td>
+          )}
         </tr>
       )
       block.groups.forEach((group, ind) => {
-        if (!block.name.includes('Plenary') && !block.name.includes('Student'))
+        if (
+          !block.name.includes('Plenary') &&
+          !block.name.includes('Student')
+        ) {
           body.push(
             <tr key={block.name + group}>
               <td></td>
               <td>
                 {typeof group === 'string' ? (
-                  <a href={`/focusGroups/${group}`}>{GROUPS[group].longName}</a>
+                  <a href={`/focusGroups/${group}`}>
+                    {GROUPS[group] && GROUPS[group].longName}
+                  </a>
                 ) : (
                   <div>
                     Joint Session
@@ -81,22 +94,13 @@ const Day = ({ blocks }) => {
                   </div>
                 )}
               </td>
-              {/* <td>
-                {typeof group === 'string' ? (
-                  <a href={`/focusGroups/${group}`}>More Info</a>
-                ) : (
-                  group.map((group, ind) => (
-                    <a href={`/focusGroups/${group}`} key={group + ind}>
-                      More Info {ind + 1}{' '}
-                    </a>
-                  ))
-                )}
-              </td> */}
               <td>
                 <a href={ROOMS[block.rooms[ind]]}>Zoom Link</a>
               </td>
             </tr>
           )
+        } else if (true) {
+        }
       })
     })
 
@@ -116,47 +120,6 @@ const Day = ({ blocks }) => {
       {makeTable(blocks)}
     </div>
   )
-
-  // return (
-  //   <div>
-  //     <h3>{blocks[0] && blocks[0].date}</h3>
-  //     <div>
-  //       {blocks.map((block) => {
-  //         const makeLink = (group) => (
-  //           <Link to={{ pathname: `/focusgroups/${group}` }}>Talks Here</Link>
-  //         )
-  //         return (
-  //           <div>
-  //             <Table bordered hover size='sm'>
-  //               {}
-
-  //               <tbody>
-  //                 {block.groups.length &&
-  //                   block.groups.map((group, ind) => {
-  //                     console.log(block)
-  //                     console.log(ROOMS[block.rooms[ind]])
-  //                     return (
-  //                       <div>
-  //                         <tr>
-  //                           <td>{block.time}</td>
-  //                           <td>{group}</td>
-  //                           <td>{makeLink(group)}</td>
-  //                           <td>{ROOMS[block.rooms[ind]]}</td>
-  //                         </tr>
-  //                       </div>
-  //                     )
-  //                   })}
-  //               </tbody>
-  //             </Table>
-  //           </div>
-  //         )
-  //       })}
-  //     </div>
-  //   </div>
-  // )
-}
-{
-  /* const BlockPublic = (block) => {} */
 }
 
 //const condition = (authUser) => !!authUser.roles[ROLES.ADMIN]

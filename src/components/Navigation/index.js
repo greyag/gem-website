@@ -31,7 +31,8 @@ const NavigationAuth = ({ authUser }) => (
     </Navbar.Brand>
     <Nav>
       <NavLink href={ROUTES.SCHEDULE}>Schedule</NavLink>
-      <NavDropdown title='Splinter Groups'>
+      <NavLink href={ROUTES.PLENARY}>Plenary Sessions</NavLink>
+      <NavDropdown title='Focus Groups'>
         {Object.keys(GROUPS).map((groupId) => (
           <NavDropdown.Item
             key={groupId}
@@ -43,6 +44,7 @@ const NavigationAuth = ({ authUser }) => (
           </NavDropdown.Item>
         ))}
       </NavDropdown>
+      <NavLink href={ROUTES.STUDENTSCHEDULE}>Student Day</NavLink>
       <SignOutButton />
     </Nav>
   </Navbar>

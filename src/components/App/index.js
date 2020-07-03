@@ -14,11 +14,14 @@ import AddTalkPage from '../AddTalk'
 import * as ROUTES from '../../constants/routes'
 import { withAuthentication } from '../Session'
 import Footer from '../Footer'
+import Header from '../Header'
+import StudentDay from '../StudentDay'
+import Plenary from '../Plenary'
 
 const App = () => (
   <div className='body'>
     <div className='myContainer'>
-      <div className='header'></div>
+      <Header />
       <div className='content'>
         <Router>
           <div>
@@ -28,6 +31,8 @@ const App = () => (
               <Route path={ROUTES.SIGN_IN} component={SignInPage} />
               <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
               <Route path={ROUTES.SCHEDULE} component={Schedule} />
+              <Route path={ROUTES.STUDENTSCHEDULE} component={StudentDay} />
+              <Route path={ROUTES.PLENARY} component={Plenary} />
               {/* <Route path={ROUTES.HOME} component={HomePage} /> */}
               {/* <Route path={ROUTES.ADMIN} component={AdminPage} /> */}
               <Route
