@@ -47,7 +47,7 @@ export const studentSession = {
         },
         pres2: {
           title: 'Software Carpentry',
-          host: '(Invited Speaker) Dr. Dan Welling',
+          host: '(Invited Speaker) Prof. Dan Welling',
         },
       },
     },
@@ -61,7 +61,7 @@ export const studentSession = {
         },
         pres2: {
           title: 'Machine Learning Applications In Space Physics',
-          host: '(Invited Speaker) Abigail Azari',
+          host: '(Invited Speaker) Dr. Abigail Azari',
         },
       },
     },

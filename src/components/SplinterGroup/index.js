@@ -22,7 +22,7 @@ class SplinterGroup extends Component {
   }
 
   async componentDidMount() {
-    let myId = this.props.match.params.groupId
+    let myId = this.props.match.params.groupId.toUpperCase()
     //let talks = {}
     // try {
     //   let talks = await this.props.firebase.getBlockTalks(myId, [
@@ -34,6 +34,7 @@ class SplinterGroup extends Component {
       name: myId,
       longName: GROUPS[myId].longName,
       hosts: GROUPS[myId].hosts,
+      slack: GROUPS[myId].slack,
       //blocks: [...GROUPS[myId].blocks, 'unscheduled'],
       //talks: talks,
       removeTalk: (block, talkId) =>

@@ -16,7 +16,6 @@ const AllBlocksComponent = ({
   let blocks = GROUPS[splinterGroup]
     ? [...GROUPS[splinterGroup].blocks, 'unscheduled']
     : []
-  console.log('blocks:', blocks)
   return (
     <div>
       {blocks.map((block) => {
@@ -24,7 +23,6 @@ const AllBlocksComponent = ({
           <div key={block}>
             <AuthUserContext.Consumer>
               {(authUser) => {
-                //console.log(authUser)
                 return authUser && authUser.roles.HOST === ROLES.HOST ? (
                   <OneBlockComponentHost
                     block={block}

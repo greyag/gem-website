@@ -1,6 +1,5 @@
 import React from 'react'
 import headerPic from '../../imgs/gemHeader.jpg'
-import { auto } from 'async'
 
 // const style = {
 //   width: 998,

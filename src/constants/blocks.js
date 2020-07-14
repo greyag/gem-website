@@ -14,6 +14,7 @@ export const BLOCKS = {
     time: '11:00am-12:30pm',
     name: 'Tuesday Plenary Session',
     date: 'Tuesday, July 21',
+    slack: 'gemworkshop.slack.com/messages/1-plenary-tuesday',
   },
   tuesAft: {
     order: 5,
@@ -31,6 +32,15 @@ export const BLOCKS = {
     name: 'Tuesday Concurrent Session 2',
     date: 'Tuesday, July 21',
   },
+  tuesPM: {
+    order: 7,
+    groups: [],
+    rooms: ['room1'],
+    time: '5:00pm-7:00pm',
+    name: 'Poster Session 1',
+    date: 'Tuesday, July 21',
+  },
+
   wedAM: {
     order: 7,
     groups: ['plenary'],
@@ -38,6 +48,7 @@ export const BLOCKS = {
     time: '11:00am-12:30pm',
     name: 'Wednesday Plenary Session',
     date: 'Wednesday, July 22',
+    slack: 'gemworkshop.slack.com/messages/1-plenary-wednesday',
   },
   wedAft: {
     order: 8,
@@ -54,7 +65,17 @@ export const BLOCKS = {
     time: '3:00pm-4:30pm',
     name: 'Wednesday Concurrent Session 2',
     date: 'Wednesday, July 22',
+    slack: 'gemworkshop.slack.com/messages/0-decadal-future-and-beyond',
   },
+  wedPM: {
+    order: 7,
+    groups: [],
+    rooms: ['room1'],
+    time: '5:00pm-7:00pm',
+    name: 'Discussion: Decadal Future and Beyond!',
+    date: 'Wednesday, July 22',
+  },
+
   thursAM: {
     order: 10,
     groups: ['plenary'],
@@ -62,6 +83,7 @@ export const BLOCKS = {
     time: '11:00am-12:30pm',
     name: 'Thursday Plenary Session',
     date: 'Thursday, July 23',
+    slack: 'gemworkshop.slack.com/messages/1-plenary-thursday',
   },
   thursAft: {
     order: 11,
@@ -78,5 +100,13 @@ export const BLOCKS = {
     time: '3:00pm-4:30pm',
     name: 'Thursday Concurrent Session 2',
     date: 'Thursday, July 23',
+  },
+  thursPM: {
+    order: 7,
+    groups: [],
+    rooms: ['room1'],
+    time: '5:00pm-7:00pm',
+    name: 'Poster Session 2',
+    date: 'Tuesday, July 21',
   },
 }

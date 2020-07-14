@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { withAuthorization } from '../Session'
 import { compose } from 'recompose'
 
@@ -9,6 +9,7 @@ import { compose } from 'recompose'
 //import { withFirebase } from '../../server/Firebase'
 import * as ROUTES from '../../constants/routes'
 import { GROUPS } from '../../constants/splinterGroups'
+import SlackLink from '../SlackLink'
 
 const FocusGroupsPage = () => (
   <div>
@@ -18,6 +19,7 @@ const FocusGroupsPage = () => (
         <Link to={`${ROUTES.FOCUSGROUPS}/${group}`}>
           {GROUPS[group].longName}
         </Link>
+        <SlackLink url={GROUPS[group].slack} />
       </div>
     ))}
   </div>

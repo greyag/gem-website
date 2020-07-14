@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Navigation from '../Navigation'
@@ -17,6 +17,11 @@ import Footer from '../Footer'
 import Header from '../Header'
 import StudentDay from '../StudentDay'
 import Plenary from '../Plenary'
+import AddPosterPage from '../AddPoster'
+import Slack from '../Slack'
+import Posters from '../Posters'
+import Discussion from '../Discussion'
+import Poster from '../Poster'
 
 const App = () => (
   <div className='body'>
@@ -50,6 +55,11 @@ const App = () => (
                 path='/focusgroups/:groupId/add'
                 component={AddTalkPage}
               />
+              <Route exact path='/posters/add' component={AddPosterPage} />
+              <Route path='/slack' component={Slack} />
+              <Route exact path='/posters' component={Posters} />
+              <Route exact path='/posters/:posterId' component={Poster} />
+              <Route exact path={ROUTES.DISCUSSION} component={Discussion} />
             </Switch>
           </div>
         </Router>

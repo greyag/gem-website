@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './gemkt.css'
 import * as serviceWorker from './serviceWorker'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './gemkt.css'
 
 import App from './components/App'
 import Firebase, { FirebaseContext } from './server/Firebase'

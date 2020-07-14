@@ -6,15 +6,15 @@ import { withFirebase } from '../../server/Firebase'
 import { Button } from 'react-bootstrap'
 
 const INITIAL_STATE = {
-  groupId: '',
   name: '',
   title: '',
   error: null,
-  selectedFile: null,
-  postTalk: () => {},
+  selectedPoster: null,
+  selectedMedia: null,
+  postPoster: () => {},
 }
 
-class AddTalkForm extends Component {
+class AddPosterForm extends Component {
   constructor(props) {
     super(props)
     this.state = { ...INITIAL_STATE }
@@ -23,16 +23,19 @@ class AddTalkForm extends Component {
 
   componentDidMount() {
     this.setState({
-      groupId: this.props.match.params.groupId,
-      postTalk: this.props.firebase.postTalk,
+      postPoster: this.props.firebase.postPoster,
     })
   }
 
   onSubmit = (event) => {
     console.log('submit!')
-    const { name, title, groupId, selectedFile } = this.state
-    this.props.firebase.postTalk(groupId, { name, title }, selectedFile)
-    this.props.history.push(`/focusgroups/${this.state.groupId}`)
+    const { name, title, selectedPoster, selectedMedia } = this.state
+    this.props.firebase.postPoster(
+      { name, title },
+      selectedPoster,
+      selectedMedia
+    )
+    this.props.history.push(`/posters/`)
     event.preventDefault()
   }
 
@@ -42,19 +45,19 @@ class AddTalkForm extends Component {
 
   onFileChange = (event) => {
     this.setState({
-      selectedFile: event.target.files[0],
+      [event.target.name]: event.target.files[0],
     })
   }
 
   render() {
-    const { name, title, groupId, error } = this.state
+    const { name, title, selectedPoster, selectedMedia, error } = this.state
 
-    const isInvalid = title === '' || name === ''
+    const isInvalid = title === '' || name === '' || selectedPoster === null
 
     console.log('state', this.state)
     return (
       <div>
-        <h3>Add a new {groupId} talk</h3>
+        <h3>Upload your Poster!</h3>
         <form onSubmit={this.onSubmit}>
           <input
             name='name'
@@ -71,14 +74,21 @@ class AddTalkForm extends Component {
             placeholder='title'
           />
           <input
-            name='selectedFile'
+            name='selectedPoster'
             onChange={this.onFileChange}
             type='file'
-            ref={this.state.fileInput}
-            placeholder='Your slides'
+            ref={selectedPoster}
+            placeholder='Your Poster'
+          />
+          <input
+            name='selectedMedia'
+            onChange={this.onFileChange}
+            type='file'
+            ref={selectedMedia}
+            placeholder='Your Video'
           />
           <button disabled={isInvalid} type='submit'>
-            Submit talk
+            Upload Poster
           </button>
           {error && <p>{error.message}</p>}
         </form>
@@ -87,11 +97,11 @@ class AddTalkForm extends Component {
   }
 }
 
-const AddTalkLink = ({ groupId }) => {
+const AddPosterLink = () => {
   return (
-    <Link to={{ pathname: `/focusgroups/${groupId}/add` }}>
+    <Link to={{ pathname: `/posters/add` }}>
       <Button type='button' variant='success'>
-        Add a talk!
+        Upload your Poster
       </Button>
     </Link>
   )
@@ -99,11 +109,11 @@ const AddTalkLink = ({ groupId }) => {
 
 const condition = (authUser) => !!authUser
 
-const AddTalkPage = compose(
+const AddPosterPage = compose(
   withRouter,
   withFirebase,
   withAuthorization(condition)
-)(AddTalkForm)
+)(AddPosterForm)
 
-export default AddTalkPage
-export { AddTalkLink, AddTalkForm }
+export default AddPosterPage
+export { AddPosterLink, AddPosterForm }

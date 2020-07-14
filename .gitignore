@@ -3,6 +3,7 @@
 #secrets
 /src/components/Firebase/config.js
 /src/components/SignIn/usernames.js
+/src/components/Discussion/hosts.js
 
 # dependencies
 /node_modules

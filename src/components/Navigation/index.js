@@ -1,14 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import SignOutButton from '../SignOut'
 import { AuthUserContext } from '../Session'
-import * as ROLES from '../../constants/roles'
 import { Navbar, Nav, NavDropdown, NavLink } from 'react-bootstrap'
 import { GROUPS } from '../../constants/splinterGroups'
 
 import gemLogo from '../../imgs/gemLogo.png'
-import SignInPage from '../SignIn'
+//import SignInPage from '../SignIn'
 
 const Navigation = () => (
   <div>
@@ -27,11 +25,10 @@ const Navigation = () => (
 const NavigationAuth = ({ authUser }) => (
   <Navbar className='color-nav' variant='light'>
     <Navbar.Brand href={ROUTES.SCHEDULE}>
-      <img src={gemLogo} height='40px' width='40px' />
+      <img src={gemLogo} height='40px' width='40px' alt='Gem Logo' />
     </Navbar.Brand>
     <Nav>
       <NavLink href={ROUTES.SCHEDULE}>Schedule</NavLink>
-      <NavLink href={ROUTES.PLENARY}>Plenary Sessions</NavLink>
       <NavDropdown title='Focus Groups'>
         {Object.keys(GROUPS).map((groupId) => (
           <NavDropdown.Item
@@ -44,7 +41,11 @@ const NavigationAuth = ({ authUser }) => (
           </NavDropdown.Item>
         ))}
       </NavDropdown>
+      <NavLink href={ROUTES.PLENARY}>Plenary Sessions</NavLink>
+      <NavLink href={ROUTES.DISCUSSION}>Decadal Discussion</NavLink>
       <NavLink href={ROUTES.STUDENTSCHEDULE}>Student Day</NavLink>
+      <NavLink href={'/posters'}>Posters</NavLink>
+      <NavLink href={ROUTES.SLACK}>Slack</NavLink>
       <SignOutButton />
     </Nav>
   </Navbar>
@@ -71,20 +72,28 @@ const NavigationAuth = ({ authUser }) => (
 const NavigationNonAuth = () => (
   <Navbar className='color-nav' variant='light'>
     <Navbar.Brand href={ROUTES.SCHEDULE}>
-      <img src={gemLogo} height='40px' width='40px' />
+      <img src={gemLogo} height='40px' width='40px' alt='Gem Logo' />
     </Navbar.Brand>
     <Nav>
       <NavLink href={ROUTES.SCHEDULE}>Schedule</NavLink>
-      <NavDropdown title='Splinter Groups'>
+      <NavDropdown title='Focus Groups'>
         {Object.keys(GROUPS).map((groupId) => (
           <NavDropdown.Item
             key={groupId}
             href={`${ROUTES.FOCUSGROUPS}/${groupId}`}
+            //className='text-wrap'
+            width='500px'
           >
             {GROUPS[groupId].longName}
           </NavDropdown.Item>
         ))}
       </NavDropdown>
+      <NavLink href={ROUTES.PLENARY}>Plenary Sessions</NavLink>
+      <NavLink href={ROUTES.DISCUSSION}>Decadal Discussion</NavLink>
+      <NavLink href={ROUTES.STUDENTSCHEDULE}>Student Day</NavLink>
+      <NavLink href={'/posters'}>Posters</NavLink>
+      <NavLink href={ROUTES.SLACK}>Slack</NavLink>
+
       <NavLink href={ROUTES.SIGN_IN} as='button'>
         Sign In
       </NavLink>

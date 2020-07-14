@@ -1,0 +1,104 @@
+researchArea,posterId,firstName,lastName,posterTitle,dayToPres
+SWMI 1,111,Andrew,Vu,Statistical Study of Substructures in Foreshock Transients,1
+SWMI 1,112,Junfeng,Du,The Acceleration of Energetic Electron Triggered by Interplanetary Shock in the Dayside Magnetosphere,1
+SWMI 1,113,ZUBAIR,SHAIKH,Evolution of quasi-2D magnetic structure within the Earth's Magnetosheath,1
+SWMI 1,114,Xueling,Shi,Interhemispheric Observations of Ground Responses to Upstream Transients,1
+SWMI 1,115,Jaewoong,Jung,Case studies of the Earth's exospheric neutral density near the subsolar magnetopause using XMM-Newton soft X-ray observations and OpenGGCM global MHD model,1
+SWMI 1,116,Brandon,Burkholder,Resolving Azimuthal Gradients in the Solar Wind with the L1 constellation,1
+SWMI 1,117,Rachel,Rice,Characterizing Cross-Scale Energy Transport Within the Kelvin-Helmholtz Instability,1
+SWMI 2,121,Xi,Lu,Statistical Study of Foreshock Density Holes,1
+SWMI 2,122,Michael,Schulz,Analytical Properties of Mead's Simplified Magnetosphere,1
+SWMI 2,123,Terry,Liu,ARTEMIS observations of foreshock transients in the midtail foreshock,1
+SWMI 2,124,Sarah,Bentley,"Teasing physics out of parameterised, statistical models: a random forest model of ULF wave power",1
+SWMI 2,125,TreShunda,James,Estimate of Interhemispheric Conductivity Difference Using SME and IMF Bz,1
+SWMI 2,126,Fatemeh,Bagheri,Correlation between Solar Wind Density and Ionospheric Electrojets during the Main Phase of Magnetic Storms,1
+SWMI 2,127,Rhyan,Sawyer,TRICE 2 Observations of Low Energy Magnetospheric Ions in the Cusp,1
+MPS 1,131,Richard,Denton,Demonstration of polynomial reconstruction program for use with MMS data,1
+MPS 1,132,Marissa,Hedlund,Direct entry and radial dependence of O+ in the near-Earth plasma sheet,1
+MPS 1,133,Dominic,Payne,Energy Transfer Mechanisms within a Magnetotail Reconnection Exhaust,1
+MPS 1,134,Roxanne,Katus,TWINS Derived Magnetospheric Ion Temperature,1
+MPS 1,135,Hongtao,Huang,On the effect of a guide field on the secondary energy dissipation region in magnetic reconnection : Particle-in-cell simulations,1
+MPS 1,136,Anthony,Rogers,Magnetic Field Line Curvature Vector Analysis near Tail Reconnection Regions,1
+MPS 1,137,Subash,Adhikari,Is reconnection a cascade process?,1
+IMAG 1,141,Xiao-Chen,Shen,Periodic Rising and Falling Tone ECH Waves,1
+IMAG 1,142,Luisa,Capannolo,"Energetic Electron Precipitation Observed by FIREBIRD-II Driven by EMIC Waves: Location, Extent, and Minimum Energy from a Multi-Event Analysis",1
+IMAG 1,143,Xingzhi,Lyu,Radial diffusion of Protons in inner magnetosphere,1
+IMAG 1,144,Longzhi,Gan,Formation Mechanism of butterfly distribution bursts: test particle and quasilinear simulation,1
+IMAG 1,145,Homayon,Aryan,Cluster Observations of Equatorial Magnetosonic Waves: The Chirikov Resonance Overlap Criteria,1
+IMAG 1,146,Xiao-Jia,Zhang,Spreading of Magnetopause-Generated Ultra-Low-Frequency Perturbations and the Associated Whistler Modulation,1
+IMAG 2,151,Brian,Wilcox,Analyzing Van-Allen Probe FLR frequencies in Python,1
+IMAG 2,152,Dedong,Wang,Controlling Effect of Wave Models and Plasma Boundaries on the Dynamic Evolution of Relativistic Radiation Belt Electrons,1
+IMAG 2,153,Ashley,Greeley,Evolution of pitch angle distributions of relativistic electrons during geomagnetic storms: Van Allen Probes Observations,1
+IMAG 2,154,Liheng,Zheng,A universal kinetic equation solver for radiation belts,1
+IMAG 2,155,Timothy,Raeder,Quantifying Electron Precipitation from the Van Allen Radiation Belts,1
+IMAG 2,156,Hyomin,Kim,Observations of wave-particle interaction associated with EMIC waves during injection events,1
+IMAG 2,161,Yuequn,Lou,Diffuse auroral electron scattering by electrostatic electron cyclotron waves in the dayside magnetosphere,1
+IMAG 2,162,Jasmine,Sandhu,ULF Wave Driven Radial Diffusion During Geomagnetic Storms,1
+IMAG 2,163,Naritoshi,Kitamura,Modulation of energy transfer between hot protons and electromagnetic ion cyclotron waves by compressional Pc5 ULF waves,1
+IMAG 2,164,Jianghuai,Liu,Investigating the Effect of Inductive Electric Field on the Kinetic Evolution of Ring Current Ion Species,1
+IMAG 2,165,Sebastian,Cervantes,Understanding the dominant loss mechanisms of radiation belt dropouts by means of data assimilation,1
+IMAG 2,166,Peter,Chi,The Surface Magnetic Assessment in Real Time (SMART) Magnetometer Network: Science Goals and Implementation Plan,1
+MIC 1,171,Agnit,Mukhopadhyay,Global Driving of Auroral Conductance - Balance of Sources & Numerical Considerations,1
+MIC 1,172,Waqar,Younas,Global and Regional Ionospheric TEC variations during geomagnetic storms,1
+MIC 1,173,Riley,Troyer,An Ongoing Statistical Study of Pulsating Aurora and its Impact on M-I Coupling,1
+MIC 1,174,Mark,Engebretson,Nighttime magnetic perturbation events observed in Arctic Canada: Superposed epoch analysis,1
+MIC 1,175,Isabella,Householder,Observations of Van Allen Radiation Belt Electron Precipitation during Satellite Conjunctions of FIREBIRD-II and POES,1
+MIC 1,176,Xingbin,Tian,Investigating energetic ion precipitation effects on ionosphere associated with field line curvature and EMIC wave scattering,1
+MIC 1,177,Vyacheslav,Pilipenko,Polar cap ULF pulsations: Coordinated Radar-Magnetometer Observations in Antarctica,1
+GSM 1,181,Darren,De Zeeuw,Kamodo: Python Visualization of Scientific Output,1
+GSM 1,182,Christopher,Bard,Tail Asymmetries in a Hall MHD,1
+GSM 1,183,Austin,Brenner,Defining the magnetopause and plasmasheet in 3D MHD simulation for global energetics analysis,1
+GSM 1,184,Rhys,Thompson,Pro-L* - A probabilistic L* mapping tool for ground observations to the magnetic equator,1
+GSM 1,185,Laura,Simms,The Combined Influence of Lower Band Chorus and ULF waves on Electron Flux (>0.23 to > 2.9 MeV),1
+SWMI 3,211,Kevin,Delano,Composition Changes in the Solar Wind and in the Dayside Magnetosphere,2
+SWMI 3,212,Donglai,Ma,Modeling the Earth's Magnetic Field using Physics Informed Neural Networks,2
+SWMI 3,213,Ilya,Kuzichev,Whistler anisotropy and heat flux instability in the solar wind: PIC simulations,2
+SWMI 3,214,Jason,Shuster,Observational Verification of the Electron Vlasov Equation with MMS,2
+SWMI 3,215,Michael,Coughlan,Training a Neural Network using geomagnetic storm data to predict ground magnetic field fluctuations,2
+SWMI 3,216,Sajila,Wickramaratne,Deep Neural Network Based Ground Horizontal Magnetic Component Prediction System Using Solar Wind Data,2
+SWMI 3,217,Naoki,Bessho,Kinetic instabilities that drive magnetic reconnection in the Earth's quasi-parallel bow shock,2
+SWMI 4,221,Michael,Starkey,The effect of Mach number on accelerated He+ pickup ions downstream of Earth's quasi-perpendicular bow shock,2
+SWMI 4,222,Matthew,Blandin,Prediction of Geomagnetic Field Disturbance at College Alaska using Long Short-Term Memory Neural Networks trained from OMNI and superMAG 2010-2011 datasets,2
+SWMI 4,223,Donglai,Ma,Modeling the Earth's Magnetic Field using Neural Networks,2
+SWMI 4,224,Prayash,Sharma Pyakurel,Enhanced Reconnection Rate in Three-Dimensional Electron-Only Reconnection,2
+SWMI 4,225,Colby,Haggerty,Hybrid Simulations of the Non-Resonant Streaming Instability Upstream of the Quasi-Parallel Bow Shock,2
+SWMI 4,226,Kristina,Pritchard,Methods for Reconnection Rate at the Magnetopause: 12/29/2016 Event,2
+SWMI 4,227,Pauline,Dredger,Case Study of Possible Closure via Birkeland Currents of Bow Shock Current Seen by MMS,2
+MPS 2,231,Don,George,Energized Oxygen in the Magnetotail: Onset and Evolution of Magnetic Reconnection,2
+MPS 2,232,mayowa,adewuyi,Plasma Sheet Ion Temperatures and Connection to the Ionosphere,2
+MPS 2,233,James,McCrum,Dat Mass: Does Ionospheric Outflow Wag the Magnetotail?,2
+MPS 2,234,Roxanne,Katus,TWINS Derived Magnetospheric Ion Temperature: Plasmasheet Injection Detection,2
+MPS 2,235,Victor,Eyelade,Variation of the parameters of ion and electron distribution functions with plasma beta parameter: Themis observations.,2
+MPS 2,236,Nehpreet,Walia,An Analysis of Slow-Shock and Slow Shock-Like Structures Observed in the 2D Hybrid Magnetic Reconnection Simulations,2
+IMAG 4,241,Wondwossen,Eshetu,Empirical formula for loss rate of ring current ions by magnetic field line curvature scattering.,2
+IMAG 4,242,Shengjun,Su,The influence of low-energy electron flux in simulating satellite surface charging environment and particle precipitation,2
+IMAG 4,243,Sheng,Huang,Hiss in the plasmasphere and plumes: Global distribution from machine learning technique and their effects on global loss of energetic electrons,2
+IMAG 4,244,Solene,Lejosne,Zebra stripes' in the Earth's inner belt and slot region: Recent Advances and Perspectives,2
+IMAG 4,245,Livia,Alves,Understanding how recurrent solar wind structures drive whistler mode chorus waves in the outer radiation belts,2
+IMAG 4,246,Oliver,Allanson,Using Driven Particle In Cell Simulations to Examine Electron Diffusion by Whistler Mode Waves,2
+IMAG 4,247,Xin,An,Excitation of time domain structures around injection fronts in the inner magnetosphere,2
+IMAG 5,251,Ilya,Kuzichev,Energization of relativistic electrons by the lightning generated whistler-mode waves,2
+IMAG 5,252,Muhammad Fraz,Bashir,The First Observation of N+ EMIC Waves,2
+IMAG 5,253,Jinbei,Huang,Quantifying the transport of radiation belt electrons due to drift orbit bifurcation,2
+IMAG 5,254,Stefano,Bianco,Machine learning models of the plasmasphere using solar wind and geomagnetic indices.,2
+IMAG 5,255,Shannon,Hill,Magnetosonic Waves: Impacting the Oxygen Dynamics in the Inner Magnetosphere,2
+IMAG 5,256,Graziela,Silva,Radial diffusion analysis of radiation belt electron dropout during a moderate storm from the descending phase of solar cycle 24,2
+IMAG 5,257,Jasmine,Sandhu,Challenging the Use of Ring Current Indices During Geomagnetic Storms,2
+MIC 2,261,Minghui,Zhu,On the ion precipitation due to EMIC waves and Ã¯Â¬Âeld line curvature (FLC) scattering and their subsequent impact on the ionosphere,2
+MIC 2,262,Hyomin,Kim,Interhemispheric Ground Responses to Hot Flow Anomalies,2
+MIC 2,263,Katharine,Duderstadt,Using FIREBIRD-II and Van Allen Probes Observations to Estimate the Impact of Radiation Belt Electron Precipitation on Atmospheric NOx and O3 during Electron Loss Events,2
+MIC 2,264,Aaron,West,Mapping and Modeling Kinetic Field Line Resonances,2
+MIC 2,265,Dong,Wei,Intense dB/dt variations driven by near-Earth bursty bulk flows (BBFs): A case study,2
+MIC 2,266,Mei-Yun,Lin,Determine the transport of the neglected N+ ions in the Earth's polar wind,2
+MIC 3,271,Shane,Coyle,Ground Magnetometer ULF Wave Observations at the Convection Reversal Boundary During Sustained Periods of Dominant IMF By,2
+MIC 3,272,Erin,Lay,Investigations of Magnetosphere-Ionosphere Coupling During the September 2017 Storm,2
+MIC 3,273,Elizabeth,Vandegriff,Small Scale dB/dt fluctuations: Resolving and Exploring Spikes in Global Models,2
+MIC 3,274,Myeong Joon,Kim,Analysis of H+ Asymmetric Pitch Angle Distributions Observed by MMS HPCA,2
+MIC 3,275,Niharika,Godbole,"RENU2 Rocket Observations of Fine-Scale Thermal Ion Upflow, Downflow, and Temperature",2
+MIC 3,276,Dillon,Gillespie,Direct derivation of diffuse electron precipitation and ionospheric conductance from the lower-band chorus wave activities during quiet and disturbed geomagnetic activitiesÃ¢â‚¬Â©,2
+MIC 3,277,Brett,McCuen,Characterization of short-timescale geomagnetic fluctuations and risk assessment of subsequent transient induced currents,2
+GSM 2,281,Michael,Hartinger,Analysis of the radial phase space density profile during Pc5 ULF wave events,2
+GSM 2,282,E.,Rigler,Imputation of Geomagnetic Disturbance Fields with Nonlinear Regression Based on Synthetic Data,2
+GSM 2,283,Michael,Gadbois,Spatial-temporal dependence of ground magnetic field perturbations on solar wind parameters determined using neural networks,2
+GSM 2,284,Victor,Pinto,A deep learning approach to the ground magnetic field perturbations GEM challenge,2
+GSM 2,285,Frances,Staples,Do statistical models capture the dynamics of the magnetopause during sudden magnetospheric compressions?,2

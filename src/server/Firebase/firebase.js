@@ -3,6 +3,7 @@ import 'firebase/auth'
 import 'firebase/database'
 import 'firebase/firestore'
 import 'firebase/storage'
+//import * as functions from 'firebase/functions'
 import config from './config'
 
 class Firebase {
@@ -67,34 +68,62 @@ class Firebase {
   // }
 
   // ** Talk API **
-  postTalk = async (splinterGroup, data, file = null) => {
+  postTalk = async (
+    splinterGroup,
+    data,
+    file = null,
+    id = null,
+    block = 'unscheduled'
+  ) => {
     //console.log('postTalk:', splinterGroup, data, file)
-    try {
-      if (file) {
-        console.log('trying to upload')
-        const storeRef = this.store
-          .child('talks')
-          .child(splinterGroup)
-          .child(file.name)
-        await storeRef.put(file)
-        console.log('uploaded file')
-        data['file'] = storeRef.location.path_
-        let url = await storeRef.getDownloadURL()
-        data['url'] = url
-        data['done'] = false
+    if (id) {
+      try {
+        if (file) {
+          console.log('trying to upload')
+          const storeRef = this.store
+            .child('talks')
+            .child(splinterGroup)
+            .child(file.name)
+          await storeRef.put(file)
+          console.log('uploaded')
+          let url = await storeRef.getDownloadURL()
+          data['url'] = url
+        }
+        await this.fs
+          .collection(`focusGroups/${splinterGroup}/blocks/${block}`)
+          .doc(id)
+          .update(data)
+      } catch (error) {
+        console.error(error)
       }
-      await this.fs
-        .collection('focusGroups')
-        .doc(splinterGroup)
-        .collection('blocks')
-        .doc('unscheduled')
-        .collection('talks')
-        .add(data)
-        .then((docRef) => {
-          console.log('new doc id:', docRef.id)
-        })
-    } catch (error) {
-      console.error(error)
+    } else {
+      try {
+        if (file) {
+          console.log('trying to upload')
+          const storeRef = this.store
+            .child('talks')
+            .child(splinterGroup)
+            .child(file.name)
+          await storeRef.put(file)
+          console.log('uploaded file')
+          data['file'] = storeRef.location.path_
+          let url = await storeRef.getDownloadURL()
+          data['url'] = url
+          data['done'] = false
+        }
+        await this.fs
+          .collection('focusGroups')
+          .doc(splinterGroup)
+          .collection('blocks')
+          .doc(block)
+          .collection('talks')
+          .add(data)
+          .then((docRef) => {
+            console.log('new doc id:', docRef.id)
+          })
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 
@@ -182,143 +211,25 @@ class Firebase {
   //   }
   //   return blocks
   // }
-  downloadTalkLink = async (talkPath = '') => {
-    //console.log('in this func')
-    let downloadURL = ''
-    let talkRef = this.store.child(talkPath)
-    const getURL = async (talkRef) => {
-      try {
-        let url = await talkRef.getDownloadURL()
-        downloadURL = url
-      } catch (error) {
-        console.error(error)
+
+  uploadPoster = async (file, id, data, isPoster) => {
+    try {
+      if (file) {
+        console.log('trying to upload')
+        const storeRef = this.store
+          .child('posters')
+          .child(id)
+          .child(isPoster ? 'poster' : 'video')
+        await storeRef.put(file)
+        console.log('uploaded')
+        let url = await storeRef.getDownloadURL()
+        data[isPoster ? 'posterUrl' : 'mediaURL'] = url
       }
+      await this.fs.collection('posters').doc(id).set(data)
+    } catch (error) {
+      console.error(error)
     }
-    await getURL(talkRef)
-    return downloadURL
   }
-
-  getBlockTalks = async (splinterGroup, blocks) => {
-    let talks = {}
-    //console.log('blocks', blocks)
-    for (let block of blocks) {
-      talks[block] = []
-      try {
-        let blocksSnapshot
-        //console.log('beforeAwait', blocksSnapshot)
-        blocksSnapshot = await this.fs
-          .collection(`focusGroups/${splinterGroup}/blocks/${block}/talks`)
-          .get()
-        // .onSnapshot((snapshot) => {
-        //   console.log('here')
-        //   blocksSnapshot = snapshot
-        //   console.log(blocksSnapshot)
-        // })
-        //console.log('afterAwait', blocksSnapshot)
-        for (let doc of blocksSnapshot.docs) {
-          //console.log(doc)
-          let url = doc.data().file
-            ? await this.downloadTalkLink(doc.data().file)
-            : ''
-          talks[block].push({ ...doc.data(), id: doc.id, url })
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    return talks
-  }
-  //console.log(splinterGroup, block)
-  // this.fs
-  //   .collection('focusGroups')
-  //   .doc(splinterGroup)
-  //   .collection('blocks')
-  //   .doc(block)
-  //   .collection('talks')
-  //   .get()
-  //   .then((snapshot) => {
-  //     if (snapshot) {
-  //       //console.log('ss', snapshot)
-  //       snapshot.forEach((doc) => {
-  //         let data = { ...doc.data() }
-  //         talks.push(data)
-  //       })
-  // let data = snapshot
-  // console.log(data)
-  // if (!data.talkIds || data.talkIds.length <= 0) {
-  //   console.log('no talks yet')
-  //   return
-  // }
-  // talks = data.talkIds.map((talkId) => {
-  //   return this.getTalk(splinterGroup, block, talkId)
-  // })
-
-  getAllTalksForGroup = async (group) => {
-    let blocks = await this.getBlocksForGroup(group)
-    let talks = blocks.map(async (block) => {
-      let talksInBlock = await this.getBlockTalks(group, block)
-      return { block: block, talks: talksInBlock }
-    })
-    //console.log('talky:', talks)
-    // .then((blocks) => {
-    //   console.log('blocks2:', blocks)
-    //   blocks.forEach((block) =>
-    //     this.getBlockTalks(group, block).then((talks) => talks.push(talks))
-    //   )
-    // })
-    // console.log(talks)
-    return talks
-  }
-
-  // getTalk = (splinterGroup, block, talkId) => {
-  //   let talk = {}
-  //   this.fs
-  //     .collection('focusGroups')
-  //     .doc(splinterGroup)
-  //     .collection('blocks')
-  //     .doc(block)
-  //     .collection(`talks`)
-  //     .doc(talkId)
-  //     .get()
-  //     .then((snapshot) => {
-  //       talk = snapshot.data()
-  //     })
-  //   return talk
-  // }
-  // moveTalkInBlock = (splinterGroup, block, from, to) => {
-  //   this.fs
-  //     .collection('focusGroups')
-  //     .doc(splinterGroup)
-  //     .collection('blocks')
-  //     .doc(block)
-  //     .get()
-  //     .then((snapshot) => {
-  //       let data = snapshot.data()
-  //       if (!data.talkIds || data.talkIds.length <= 0) {
-  //         console.error('no talks to move')
-  //         return
-  //       }
-  //       data.talkIds.splice(to, 0, ...data.talkIds.splice(from, 1))
-
-  //       this.fs
-  //         .collection('focusGroups')
-  //         .doc(splinterGroup)
-  //         .collection('blocks')
-  //         .doc(block)
-  //         .set(data, { merge: true })
-  //         .then(() => console.log(`block reorderred`))
-  //     })
-  // }
-  // getFocusGroups = () => {
-  //   let focusGroups = []
-  //   this.fs
-  //     .collection(`focusGroups`)
-  //     .get()
-  //     .then((snapshot) => {
-  //       focusGroups = snapshot.map((doc) => doc.data())
-  //     })
-  //   return focusGroups
-  // }
 }
 
 export default Firebase

@@ -5,6 +5,10 @@ import { BLOCKS } from '../../constants/blocks'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
 import { Table, Modal, Button } from 'react-bootstrap'
 import { GROUPS } from '../../constants/splinterGroups'
+import ZoomLink from '../ZoomLink'
+import SlackLink from '../SlackLink'
+import { AiOutlineCloudUpload, AiOutlineCloudDownload } from 'react-icons/ai'
+import * as ROUTES from '../../constants/routes'
 
 const useTalks = (splinterGroup, block, firebase) => {
   const [talks, setTalks] = useState([])
@@ -23,6 +27,8 @@ const useTalks = (splinterGroup, block, firebase) => {
   return talks
 }
 
+//const uploadSlides = () => {}
+
 let OneBlockComponentHost = ({
   block = '',
   removeTalk,
@@ -33,7 +39,7 @@ let OneBlockComponentHost = ({
 }) => {
   let talks = useTalks(splinterGroup, block, props.firebase)
 
-  let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
+  let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled Talks'
 
   const handleCompleteClick = (talk) => {
     props.firebase.setCompleted(splinterGroup, block, talk.id, !talk.done)
@@ -108,34 +114,43 @@ let OneBlockComponentHost = ({
         ))}
     </DropdownButton>
   )
-  let zoomLink = BLOCKS[block]
-    ? BLOCKS[block]['rooms'][findIndex(BLOCKS[block].groups, splinterGroup)]
-    : undefined
+  let roomInd = BLOCKS[block] && BLOCKS[block].groups.indexOf(splinterGroup)
+  let partner
 
+  let isJoint = roomInd === -1
+  if (isJoint) {
+    console.log('groups:', BLOCKS[block].groups)
+    roomInd = BLOCKS[block].groups.findIndex((elem) => typeof elem !== 'string')
+    partner = BLOCKS[block].groups[roomInd].filter(
+      (elem) => elem !== splinterGroup
+    )[0]
+  }
+
+  let zoomLink = BLOCKS[block] ? BLOCKS[block]['rooms'][roomInd] : undefined
   return (
     <div>
       <h3>{blockLongName}</h3>
-      <h4>{BLOCKS[block] && BLOCKS[block].time}</h4>
-      <h6>
-        {zoomLink && <a href={`${zoomLink}`}>Zoom Link</a>} {' | '}
-        {GROUPS[splinterGroup] && GROUPS[splinterGroup].slack && (
-          <a
-            target='_blank'
-            rel='noreferrer'
-            href={'http://' + GROUPS[splinterGroup].slack}
-          >
-            Slack Link
+      <h4>
+        {isJoint && 'JOINT SESSION with '}
+        {isJoint && (
+          <a href={`${ROUTES.FOCUSGROUPS}/${partner}`}>
+            {GROUPS[partner].longName}
           </a>
         )}
+      </h4>
+      <h4>{BLOCKS[block] && BLOCKS[block].time + ' ET'}</h4>
+      <h6>
+        {zoomLink && <ZoomLink url={zoomLink} />}
+        {BLOCKS[block] && <SlackLink url={GROUPS[splinterGroup].slack} />}
       </h6>
 
       <Table>
         <thead>
           <tr>
+            <th>Done</th>
             <th>Presenter</th>
             <th>Title</th>
-            <th>Completed</th>
-            <th>Download Link</th>
+            <th></th>
             <th></th>
             {block === 'unscheduled' && <th></th>}
           </tr>
@@ -144,15 +159,29 @@ let OneBlockComponentHost = ({
           {talks.length > 0 &&
             talks.map((talk) => {
               return (
-                <tr key={talk.id}>
+                <tr key={talk.id} className={talk.done && 'bg-secondary'}>
+                  <td>
+                    <input
+                      type='checkbox'
+                      id='done'
+                      name='done'
+                      checked={talk.done}
+                      onClick={() => handleCompleteClick(talk)}
+                    ></input>
+                  </td>
                   <td>{talk.name}</td>
                   <td>{talk.title}</td>
                   <td> </td>
                   {talk.file ? (
                     <td>
                       {
-                        <a href={talk.url} download>
-                          Download
+                        <a
+                          href={talk.url}
+                          download
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          {<AiOutlineCloudDownload size='30' />}
                         </a>
                       }
                     </td>
@@ -177,17 +206,39 @@ let OneBlockComponentHost = ({
 let OneBlockComponentAttendee = ({ block = '', splinterGroup, ...props }) => {
   const talks = useTalks(splinterGroup, block, props.firebase)
 
-  let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled'
+  let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled Talks'
 
-  let zoomLink = BLOCKS[block]
-    ? BLOCKS[block]['rooms'][(findIndex(BLOCKS[block].groups), splinterGroup)]
-    : undefined
+  let roomInd =
+    BLOCKS[block] &&
+    BLOCKS[block].groups.findIndex((elem) => elem === splinterGroup)
+  let partner
+
+  let isJoint = roomInd === -1
+  if (isJoint) {
+    roomInd = BLOCKS[block].groups.findIndex((elem) => typeof elem !== 'string')
+    partner = BLOCKS[block].groups[roomInd].filter(
+      (elem) => elem !== splinterGroup
+    )[0]
+  }
+
+  let zoomLink = BLOCKS[block] ? BLOCKS[block]['rooms'][roomInd] : undefined
 
   return (
     <div>
       <h3>{blockLongName}</h3>
-      <h4>{BLOCKS[block] && BLOCKS[block].time}</h4>
-      <h6>{zoomLink && <a href={`${zoomLink}`}>Zoom Link</a>}</h6>
+      <h4>
+        {isJoint && 'JOINT SESSION with '}
+        {isJoint && (
+          <a href={`${ROUTES.FOCUSGROUPS}/${partner}`}>
+            {GROUPS[partner].longName}
+          </a>
+        )}
+      </h4>
+      <h4>{BLOCKS[block] && BLOCKS[block].time + ' ET'}</h4>
+      <h6>
+        {zoomLink && <ZoomLink url={zoomLink} />}
+        {BLOCKS[block] && <SlackLink url={GROUPS[splinterGroup].slack} />}
+      </h6>
       <Table>
         <tbody>
           <tr>
@@ -197,7 +248,7 @@ let OneBlockComponentAttendee = ({ block = '', splinterGroup, ...props }) => {
           {talks.length > 0 &&
             talks.map((talk, ind) => {
               return (
-                <tr key={ind}>
+                <tr key={talk.id} className={talk.done && 'bg-secondary'}>
                   <td>{talk.name}</td>
                   <td>{talk.title}</td>
                 </tr>
@@ -208,19 +259,6 @@ let OneBlockComponentAttendee = ({ block = '', splinterGroup, ...props }) => {
       {talks.length === 0 && <p>No talks here!</p>}
     </div>
   )
-}
-
-const findIndex = (groupsArr, splinterGroup) => {
-  let index = groupsArr.reduce((accum, curr, ind) => {
-    if (curr === splinterGroup) {
-      return ind
-    } else if (typeof curr !== 'string') {
-      if (curr.indexOf(splinterGroup) > -1) return ind
-    } else {
-      return accum
-    }
-  }, -1)
-  return index
 }
 
 OneBlockComponentHost = compose(withFirebase)(OneBlockComponentHost)
