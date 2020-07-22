@@ -11,7 +11,22 @@ import { Form, Button } from 'react-bootstrap'
 const SignInPage = () => (
   <div>
     <h1>Sign In</h1>
+
     <SignInForm />
+    <br />
+    <p>
+      <a
+        href='https://gemworkshop.org/'
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        Go to the workshop website to register for the credentials.
+      </a>
+    </p>
+
+    <p>
+      If you are in China, you will need to use a VPN to access this website.
+    </p>
     {/* <SignUpLink />  */}
   </div>
 )

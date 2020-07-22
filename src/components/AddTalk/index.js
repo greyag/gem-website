@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import React, { useState, useEffect, Component } from 'react'
 import { compose } from 'recompose'
+import { Link, withRouter } from 'react-router-dom'
 import { withAuthorization } from '../Session'
 import { withFirebase } from '../../server/Firebase'
-import { Button } from 'react-bootstrap'
+import { Button, Form, Modal } from 'react-bootstrap'
 
 const INITIAL_STATE = {
   groupId: '',
@@ -12,6 +12,118 @@ const INITIAL_STATE = {
   error: null,
   selectedFile: null,
   postTalk: () => {},
+}
+
+const AddTalkModal = ({
+  splinterGroup,
+  block = 'unscheduled',
+  firebase,
+  ...props
+}) => {
+  const [showModal, setShowModal] = useState(false)
+  const [title, setTitle] = useState('')
+  const [name, setName] = useState('')
+  const [isPublic, setIsPublic] = useState(false)
+  const [slides, setSlides] = useState(null)
+  const handleToggle = () => setShowModal(!showModal)
+
+  //console.log(title, name)
+
+  return (
+    <div>
+      <Button type='button' variant='success' onClick={() => handleToggle()}>
+        Add a talk!
+      </Button>
+      <Modal
+        show={showModal}
+        size='lg'
+        aria-labelledby='contained-modal-title-vcenter'
+        centered
+        backdrop={true}
+        onHide={handleToggle}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id='contained-modal-title-vcenter'>
+            Add a {splinterGroup} Talk
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSubmit={(e) => {
+              firebase.postTalk(
+                splinterGroup,
+                { name, title, isPublic },
+                slides
+              )
+              e.preventDefault()
+              console.log('Submitted!')
+              // firebase.uploadPoster(posterFile, poster.posterId, poster, true)
+              // videoFile &&
+              //   firebase.uploadPoster(
+              //     videoFile,
+              //     researchArea,
+              //     poster.posterId,
+              //     poster,
+              //     false
+              // const { name, title, groupId, selectedFile } = this.state
+              // this.props.firebase.postTalk(
+              //   groupId,
+              //   { name, title },
+              //   selectedFile
+              setShowModal(false)
+            }}
+          >
+            <Form.Group controlId='title'>
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Your Title'
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId='name'>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                placeholder='Your Name'
+                type='text'
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.File
+                id='slidesFile'
+                label='Please upload your presentation.'
+                onChange={(e) => setSlides(e.target.files[0])}
+              />
+            </Form.Group>
+            <Form.Text className='text-muted'>
+              You can reupload your files at any time. The files you had
+              previously uploaded will be overwritten.
+            </Form.Text>
+
+            <br />
+            <Form.Group controlId='public'>
+              <Form.Check
+                id='public'
+                type='checkbox'
+                checked={isPublic}
+                onChange={() => setIsPublic(!isPublic)}
+                label={`I wish to allow all attendees to this workshop access to my presentation. If unchecked, it will be made available to hosts only.`}
+              />
+            </Form.Group>
+            <br />
+            <Button
+              variant='primary'
+              type='submit'
+              disabled={!(title.length && name.length)}
+            >
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </div>
+  )
 }
 
 class AddTalkForm extends Component {
@@ -106,4 +218,4 @@ const AddTalkPage = compose(
 )(AddTalkForm)
 
 export default AddTalkPage
-export { AddTalkLink, AddTalkForm }
+export { AddTalkLink, AddTalkForm, AddTalkModal }

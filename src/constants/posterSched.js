@@ -157,14 +157,6 @@ export const posterSched = {
       },
       {
         researchArea: 'MPS 1',
-        posterId: '134',
-        firstName: 'Roxanne',
-        lastName: 'Katus',
-        title: 'TWINS Derived Magnetospheric Ion Temperature',
-        day: '1',
-      },
-      {
-        researchArea: 'MPS 1',
         posterId: '135',
         firstName: 'Hongtao',
         lastName: 'Huang',
@@ -187,6 +179,15 @@ export const posterSched = {
         firstName: 'Subash',
         lastName: 'Adhikari',
         title: 'Is reconnection a cascade process?',
+        day: '1',
+      },
+      {
+        researchArea: 'MPS 1',
+        posterId: '138',
+        firstName: 'Akhtar',
+        lastName: 'Ardakani',
+        title:
+          'How Heavy Ions Could Change the Magnetotail’s Magnetic Reconnection Game',
         day: '1',
       },
     ],
@@ -243,6 +244,14 @@ export const posterSched = {
           'Spreading of Magnetopause-Generated Ultra-Low-Frequency Perturbations and the Associated Whistler Modulation',
         day: '1',
       },
+      {
+        researchArea: 'IMAG 1',
+        posterId: '147',
+        firstName: 'Zhao',
+        lastName: 'Li',
+        title: 'Modeling Advective Transport of Radiation Belt Electrons',
+        day: '1',
+      },
     ],
     'IMAG 2': [
       {
@@ -290,11 +299,11 @@ export const posterSched = {
       },
       {
         researchArea: 'IMAG 2',
-        posterId: '156',
-        firstName: 'Hyomin',
-        lastName: 'Kim',
+        posterId: '157',
+        firstName: 'Christian',
+        lastName: 'Bagby-Wright',
         title:
-          'Observations of wave-particle interaction associated with EMIC waves during injection events',
+          'Recirculation of Plasmasphere Material During a Stormtime Event',
         day: '1',
       },
     ],
@@ -350,6 +359,14 @@ export const posterSched = {
         lastName: 'Chi',
         title:
           'The Surface Magnetic Assessment in Real Time (SMART) Magnetometer Network: Science Goals and Implementation Plan',
+        day: '1',
+      },
+      {
+        researchArea: 'IMAG 3',
+        posterId: '167',
+        firstName: 'Wenyao',
+        lastName: 'Gu',
+        title: 'Alpha transmitter signal reflection and triggered emissions',
         day: '1',
       },
     ],
@@ -462,9 +479,18 @@ export const posterSched = {
           'The Combined Influence of Lower Band Chorus and ULF waves on Electron Flux (>0.23 to > 2.9 MeV)',
         day: '1',
       },
+      {
+        researchArea: 'GSM 1',
+        posterId: '186',
+        firstName: 'Lifang',
+        lastName: 'Li',
+        title:
+          'Quantifying Event‐Specific Radial Diffusion Coefficients of Radiation Belt Electrons With the PPMLR‐MHD Simulation',
+        day: '1',
+      },
     ],
   },
-  thusday: {
+  thursday: {
     'SWMI 3': [
       {
         researchArea: 'SWMI 3',
@@ -552,9 +578,10 @@ export const posterSched = {
       {
         researchArea: 'SWMI 4',
         posterId: '223',
-        firstName: 'Donglai',
-        lastName: 'Ma',
-        title: "Modeling the Earth's Magnetic Field using Neural Networks",
+        firstName: 'Luis',
+        lastName: 'Preisser',
+        title:
+          'Magnetosheath Jets and Plasmoids: Characteristics and formation mechanisms from hybrid simulations',
         day: '2',
       },
       {
@@ -573,15 +600,6 @@ export const posterSched = {
         lastName: 'Haggerty',
         title:
           'Hybrid Simulations of the Non-Resonant Streaming Instability Upstream of the Quasi-Parallel Bow Shock',
-        day: '2',
-      },
-      {
-        researchArea: 'SWMI 4',
-        posterId: '226',
-        firstName: 'Kristina',
-        lastName: 'Pritchard',
-        title:
-          'Methods for Reconnection Rate at the Magnetopause: 12/29/2016 Event',
         day: '2',
       },
       {
@@ -784,7 +802,7 @@ export const posterSched = {
         firstName: 'Minghui',
         lastName: 'Zhu',
         title:
-          'On the ion precipitation due to EMIC waves and Ã¯Â¬Âeld line curvature (FLC) scattering and their subsequent impact on the ionosphere',
+          'On the ion precipitation due to EMIC waves and field line curvature (FLC) scattering and their subsequent impact on the ionosphere',
         day: '2',
       },
       {
@@ -828,6 +846,15 @@ export const posterSched = {
         lastName: 'Lin',
         title:
           "Determine the transport of the neglected N+ ions in the Earth's polar wind",
+        day: '2',
+      },
+      {
+        researchArea: 'MIC 2',
+        posterId: '267',
+        firstName: 'Yuzhang',
+        lastName: 'Ma',
+        title:
+          'Westward travelling surge driven by the polar cap flow channels',
         day: '2',
       },
     ],
@@ -940,6 +967,15 @@ export const posterSched = {
         lastName: 'Staples',
         title:
           'Do statistical models capture the dynamics of the magnetopause during sudden magnetospheric compressions?',
+        day: '2',
+      },
+      {
+        researchArea: 'GSM 2',
+        posterId: '286',
+        firstName: 'Boyi',
+        lastName: 'Wang',
+        title:
+          'Acceleration of Ions by the ULF Waves Driven by a Foreshock Transient',
         day: '2',
       },
     ],

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { withFirebase } from '../../server/Firebase'
+import Firebase, { withFirebase } from '../../server/Firebase'
 import { compose } from 'recompose'
 import { BLOCKS } from '../../constants/blocks'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
-import { Table, Modal, Button } from 'react-bootstrap'
+import { Table, Modal, Button, Form } from 'react-bootstrap'
 import { GROUPS } from '../../constants/splinterGroups'
 import ZoomLink from '../ZoomLink'
 import SlackLink from '../SlackLink'
@@ -15,6 +15,7 @@ const useTalks = (splinterGroup, block, firebase) => {
   useEffect(() => {
     const unsubscribe = firebase.fs
       .collection(`focusGroups/${splinterGroup}/blocks/${block}/talks`)
+      .orderBy('moveTime')
       .onSnapshot((snapshot) => {
         const newTalks = snapshot.docs.map((doc) => {
           return { ...doc.data(), id: doc.id }
@@ -26,18 +27,40 @@ const useTalks = (splinterGroup, block, firebase) => {
 
   return talks
 }
+const useZooms = (firebase) => {
+  const [zooms, setZooms] = useState({})
+  useEffect(() => {
+    let newZooms = {}
+    const unsubscribe = firebase.db
+      .ref(`/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Zooms/`)
+      .on('value', (snapshot) => {
+        let data = snapshot.val()
+        Object.keys(data).map((room) => {
+          newZooms[data[room].room] = data[room]
+        })
+        setZooms(newZooms)
+      })
+    return unsubscribe
+  }, [firebase])
+  return zooms
+}
 
 //const uploadSlides = () => {}
 
-let OneBlockComponentHost = ({
+let OneBlockComponent = ({
   block = '',
-  removeTalk,
-  moveTalk,
-  blocks,
-  splinterGroup,
+  removeTalk = () => {},
+  moveTalk = () => {},
+  blocks = [],
+  splinterGroup = '',
+  isHost = false,
+  allowMove = true,
+  isFocusGroup = true,
   ...props
 }) => {
   let talks = useTalks(splinterGroup, block, props.firebase)
+  console.log('talks:', talks)
+  // props.firebase.talksHaveMoveTime(talks, splinterGroup, block)
 
   let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled Talks'
 
@@ -119,17 +142,19 @@ let OneBlockComponentHost = ({
 
   let isJoint = roomInd === -1
   if (isJoint) {
-    console.log('groups:', BLOCKS[block].groups)
     roomInd = BLOCKS[block].groups.findIndex((elem) => typeof elem !== 'string')
     partner = BLOCKS[block].groups[roomInd].filter(
       (elem) => elem !== splinterGroup
     )[0]
   }
 
-  let zoomLink = BLOCKS[block] ? BLOCKS[block]['rooms'][roomInd] : undefined
+  let zoomRoom = BLOCKS[block] ? BLOCKS[block]['rooms'][roomInd] : undefined
+
+  let zooms = useZooms(props.firebase)
+  console.log(zooms)
   return (
     <div>
-      <h3>{blockLongName}</h3>
+      <h3>{isFocusGroup && blockLongName}</h3>
       <h4>
         {isJoint && 'JOINT SESSION with '}
         {isJoint && (
@@ -138,20 +163,21 @@ let OneBlockComponentHost = ({
           </a>
         )}
       </h4>
-      <h4>{BLOCKS[block] && BLOCKS[block].time + ' ET'}</h4>
+      <h4>{BLOCKS[block] && BLOCKS[block].time + ' EDT or GMT - 4'}</h4>
       <h6>
-        {zoomLink && <ZoomLink url={zoomLink} />}
+        {zoomRoom && <ZoomLink url={zooms[zoomRoom]} />}
         {BLOCKS[block] && <SlackLink url={GROUPS[splinterGroup].slack} />}
       </h6>
 
       <Table>
         <thead>
           <tr>
-            <th>Done</th>
+            {isHost && <th>Done</th>}
             <th>Presenter</th>
             <th>Title</th>
             <th></th>
             <th></th>
+            {isHost && allowMove && <th></th>}
             {block === 'unscheduled' && <th></th>}
           </tr>
         </thead>
@@ -159,20 +185,33 @@ let OneBlockComponentHost = ({
           {talks.length > 0 &&
             talks.map((talk) => {
               return (
-                <tr key={talk.id} className={talk.done && 'bg-secondary'}>
-                  <td>
-                    <input
-                      type='checkbox'
-                      id='done'
-                      name='done'
-                      checked={talk.done}
-                      onClick={() => handleCompleteClick(talk)}
-                    ></input>
-                  </td>
+                <tr
+                  key={talk.id}
+                  className={talk.done ? 'bg-secondary' : undefined}
+                >
+                  {isHost && (
+                    <td>
+                      <input
+                        type='checkbox'
+                        id='done'
+                        name='done'
+                        checked={talk.done}
+                        onChange={() => handleCompleteClick(talk)}
+                      ></input>
+                    </td>
+                  )}
                   <td>{talk.name}</td>
                   <td>{talk.title}</td>
-                  <td> </td>
-                  {talk.file ? (
+                  <td>
+                    <UploadButton
+                      splinterGroup={splinterGroup}
+                      firebase={props.firebase}
+                      block={block}
+                      talk={talk}
+                      title='Upload'
+                    />
+                  </td>
+                  {(isHost || talk.isPublic) && talk.url ? (
                     <td>
                       {
                         <a
@@ -186,13 +225,15 @@ let OneBlockComponentHost = ({
                       }
                     </td>
                   ) : (
-                    <td> </td>
+                    isHost && <td></td>
                   )}
 
-                  <td>{MoveButton(blocks, block, talk.id)}</td>
-                  <td>
-                    {block === 'unscheduled' && <RemoveButton talk={talk} />}
-                  </td>
+                  {isHost && <td>{MoveButton(blocks, block, talk.id)}</td>}
+                  {isHost && (
+                    <td>
+                      {block === 'unscheduled' && <RemoveButton talk={talk} />}
+                    </td>
+                  )}
                 </tr>
               )
             })}
@@ -202,66 +243,90 @@ let OneBlockComponentHost = ({
     </div>
   )
 }
-
-let OneBlockComponentAttendee = ({ block = '', splinterGroup, ...props }) => {
-  const talks = useTalks(splinterGroup, block, props.firebase)
-
-  let blockLongName = BLOCKS[block] ? BLOCKS[block].name : 'Unscheduled Talks'
-
-  let roomInd =
-    BLOCKS[block] &&
-    BLOCKS[block].groups.findIndex((elem) => elem === splinterGroup)
-  let partner
-
-  let isJoint = roomInd === -1
-  if (isJoint) {
-    roomInd = BLOCKS[block].groups.findIndex((elem) => typeof elem !== 'string')
-    partner = BLOCKS[block].groups[roomInd].filter(
-      (elem) => elem !== splinterGroup
-    )[0]
-  }
-
-  let zoomLink = BLOCKS[block] ? BLOCKS[block]['rooms'][roomInd] : undefined
-
+const UploadButton = ({ splinterGroup, firebase, block, talk, ...props }) => {
+  const [showModal, setShowModal] = useState(false)
+  const [slides, setSlides] = useState(null)
+  const [isPublic, setIsPublic] = useState(false)
+  const [verify, setVerify] = useState(false)
+  const handleToggle = () => setShowModal(!showModal)
   return (
     <div>
-      <h3>{blockLongName}</h3>
-      <h4>
-        {isJoint && 'JOINT SESSION with '}
-        {isJoint && (
-          <a href={`${ROUTES.FOCUSGROUPS}/${partner}`}>
-            {GROUPS[partner].longName}
-          </a>
-        )}
-      </h4>
-      <h4>{BLOCKS[block] && BLOCKS[block].time + ' ET'}</h4>
-      <h6>
-        {zoomLink && <ZoomLink url={zoomLink} />}
-        {BLOCKS[block] && <SlackLink url={GROUPS[splinterGroup].slack} />}
-      </h6>
-      <Table>
-        <tbody>
-          <tr>
-            <th>Presenter</th>
-            <th>Title</th>
-          </tr>
-          {talks.length > 0 &&
-            talks.map((talk, ind) => {
-              return (
-                <tr key={talk.id} className={talk.done && 'bg-secondary'}>
-                  <td>{talk.name}</td>
-                  <td>{talk.title}</td>
-                </tr>
+      <AiOutlineCloudUpload
+        size='30'
+        onClick={() => handleToggle()}
+        title='Upload'
+      />
+      <Modal
+        show={showModal}
+        size='lg'
+        aria-labelledby='contained-modal-title-vcenter'
+        centered
+        backdrop={true}
+        onHide={handleToggle}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id='contained-modal-title-vcenter'>
+            Upload Poster Files
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault()
+              console.log('Submitted!')
+              firebase.postTalk(
+                splinterGroup,
+                { ...talk, isPublic },
+                slides,
+                talk.id,
+                block
               )
-            })}
-        </tbody>
-      </Table>
-      {talks.length === 0 && <p>No talks here!</p>}
+              setShowModal(false)
+            }}
+          >
+            <Form.Group controlId='verify'>
+              <Form.Check
+                id='verify'
+                type='checkbox'
+                checked={verify}
+                onChange={() => setVerify(!verify)}
+                label={`I confirm that I am ${talk.name}.`}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.File
+                id='posterFile'
+                label='Please upload your presentation.'
+                onChange={(e) => setSlides(e.target.files[0])}
+              />
+            </Form.Group>
+            You can reupload your files at any time. The files you had
+            previously uploaded will be overwritten.
+            <br />
+            <Form.Group>
+              <Form.Check
+                id='public'
+                type='checkbox'
+                checked={isPublic}
+                onChange={() => setIsPublic(!isPublic)}
+                label={`I wish to allow all attendees to this workshop access to my presentation. If unchecked, it will be made available to hosts only.`}
+              />
+            </Form.Group>
+            <br />
+            <Button
+              variant='primary'
+              type='submit'
+              disabled={!(verify && !!slides)}
+            >
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }
 
-OneBlockComponentHost = compose(withFirebase)(OneBlockComponentHost)
-OneBlockComponentAttendee = compose(withFirebase)(OneBlockComponentAttendee)
+OneBlockComponent = compose(withFirebase)(OneBlockComponent)
 
-export { OneBlockComponentHost, OneBlockComponentAttendee }
+export default OneBlockComponent

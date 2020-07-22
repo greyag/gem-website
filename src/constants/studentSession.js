@@ -1,6 +1,22 @@
 export const studentSession = {
   date: 'Monday, July 20',
+  slack: 'gemworkshop.slack.com/messages/0-student',
+  zoom: 'room1',
   blocks: {
+    block0: {
+      timeET: '11:30pm-12:00pm',
+      timePT: '8:30am-9:00am',
+      presentations: {
+        pres1: {
+          title: 'Introduction',
+          host: 'Matthew Cooper and Agnit Mukhopadhyay',
+        },
+        pres2: {
+          title: 'History of GEM',
+          host: 'Dr. Lou Lanzerotti',
+        },
+      },
+    },
     block1: {
       timeET: '12:00pm-1:00pm',
       timePT: '9:00am-10:00am',
@@ -32,7 +48,7 @@ export const studentSession = {
           host: 'Mei-Yun Lin',
         },
         pres3: {
-          title: 'Numerical Modeling &amp; Data Science',
+          title: 'Numerical Modeling & Data Science',
           host: 'Blake Whetherton',
         },
       },

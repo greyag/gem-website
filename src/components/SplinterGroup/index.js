@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { withFirebase } from '../../server/Firebase'
 import { compose } from 'recompose'
 import { withAuthorization } from '../Session'
 import { GROUPS } from '../../constants/splinterGroups'
-import { AddTalkLink } from '../AddTalk'
+import { AddTalkModal } from '../AddTalk'
 import AllBlocksComponent from './AllBlocksComponent'
 
 const INITIAL_STATE = {
@@ -13,6 +13,23 @@ const INITIAL_STATE = {
   //blocks: [],
   //blocksAndTalks: {},
   //loading: false,
+}
+const useZooms = (firebase) => {
+  const [zooms, setZooms] = useState({})
+  useEffect(() => {
+    let newZooms = {}
+    const unsubscribe = firebase.db
+      .ref(`/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Zooms/`)
+      .on('value', (snapshot) => {
+        let data = snapshot.val()
+        Object.keys(data).map((room) => {
+          newZooms[data[room].room] = data[room]
+        })
+        setZooms(newZooms)
+      })
+    return unsubscribe
+  }, [firebase])
+  return zooms
 }
 
 class SplinterGroup extends Component {
@@ -59,8 +76,11 @@ class SplinterGroup extends Component {
     return (
       <div>
         <h1>{this.state.longName}</h1>
-        <p>Hosted by: {this.state.hosts}</p>
-        <AddTalkLink groupId={this.state.name} />
+        <p>Focus Group Leaders: {this.state.hosts}</p>
+        <AddTalkModal
+          splinterGroup={this.state.name}
+          firebase={this.props.firebase}
+        />
 
         <AllBlocksComponent
           //talkObj={this.state.talks}
@@ -69,7 +89,10 @@ class SplinterGroup extends Component {
           splinterGroup={this.state.name}
         />
 
-        <AddTalkLink groupId={this.state.name} />
+        <AddTalkModal
+          splinterGroup={this.state.name}
+          firebase={this.props.firebase}
+        />
       </div>
     )
   }

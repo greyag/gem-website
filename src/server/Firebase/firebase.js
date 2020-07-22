@@ -1,4 +1,4 @@
-import app from 'firebase/app'
+import app, { firestore } from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 import 'firebase/firestore'
@@ -13,6 +13,9 @@ class Firebase {
     this.db = app.database()
     this.fs = app.firestore()
     this.store = app.storage().ref()
+    this.fs.enablePersistence().catch(function (err) {
+      console.error(err)
+    })
   }
 
   // ** Auth API **
@@ -75,8 +78,8 @@ class Firebase {
     id = null,
     block = 'unscheduled'
   ) => {
-    //console.log('postTalk:', splinterGroup, data, file)
-    if (id) {
+    console.log('postTalk:', splinterGroup, data, file, id, block)
+    if (id || data.id) {
       try {
         if (file) {
           console.log('trying to upload')
@@ -87,11 +90,12 @@ class Firebase {
           await storeRef.put(file)
           console.log('uploaded')
           let url = await storeRef.getDownloadURL()
+          console.log(url)
           data['url'] = url
         }
         await this.fs
-          .collection(`focusGroups/${splinterGroup}/blocks/${block}`)
-          .doc(id)
+          .collection(`focusGroups/${splinterGroup}/blocks/${block}/talks`)
+          .doc(id ? id : data.id)
           .update(data)
       } catch (error) {
         console.error(error)
@@ -117,7 +121,7 @@ class Firebase {
           .collection('blocks')
           .doc(block)
           .collection('talks')
-          .add(data)
+          .add({ ...data, moveTime: firestore.Timestamp.now() })
           .then((docRef) => {
             console.log('new doc id:', docRef.id)
           })
@@ -138,8 +142,9 @@ class Firebase {
       let newRef = await oldRef.parent.parent.parent.doc(
         `${newBlock}/talks/${oldRef.id}`
       )
-      console.log('newRef', newRef)
-      await newRef.set(await snapshot.data())
+      await newRef.set(
+        await { ...snapshot.data(), moveTime: firestore.Timestamp.now() }
+      )
       await oldRef.delete()
     } catch (error) {
       console.error(error)
@@ -149,6 +154,7 @@ class Firebase {
     let ref = this.fs.doc(
       `focusGroups/${splinterGroup}/blocks/${block}/talks/${talkId}`
     )
+    console.log(ref)
     console.log(ref)
     if (file !== '') {
       let storeRef = this.store.child(file)
@@ -214,20 +220,73 @@ class Firebase {
 
   uploadPoster = async (file, id, data, isPoster) => {
     try {
+      console.log(file, id, data, isPoster)
+      console.log(id)
       if (file) {
         console.log('trying to upload')
         const storeRef = this.store
           .child('posters')
-          .child(id)
+          .child(id.toString())
           .child(isPoster ? 'poster' : 'video')
+          .child(file.name)
         await storeRef.put(file)
         console.log('uploaded')
         let url = await storeRef.getDownloadURL()
         data[isPoster ? 'posterUrl' : 'mediaURL'] = url
       }
-      await this.fs.collection('posters').doc(id).set(data)
+      await this.fs.collection('posters').doc(id.toString()).set(data)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  uploadElection = async ({ video, bio, data, pdf }) => {
+    try {
+      console.log(video, bio, data, pdf)
+      if (bio.length) {
+        data['bio'] = bio
+      }
+      if (video) {
+        console.log('trying to upload')
+        const storeRef = this.store
+          .child('election')
+          .child(data.id.toString())
+          .child(video.name)
+        await storeRef.put(video)
+        console.log('uploaded')
+        let url = await storeRef.getDownloadURL()
+        data['url'] = url
+      }
+
+      if (pdf) {
+        console.log('trying to upload')
+        const storeRef = this.store
+          .child('election')
+          .child(data.id.toString())
+          .child(pdf.name)
+        await storeRef.put(pdf)
+        console.log('uploaded')
+        let url = await storeRef.getDownloadURL()
+        data['pdfURL'] = url
+      }
+
+      await this.fs
+        .collection('election')
+        .doc(data.id.toString())
+        .set({ ...data })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  talksHaveMoveTime = async (arrTalks = [], splinterGroup, block) => {
+    for (let talk of arrTalks) {
+      if (!talk['moveTime']) {
+        await this.fs
+          .collection(`focusGroups/${splinterGroup}/blocks/${block}/talks`)
+          .doc(talk.id)
+          .update({ moveTime: firestore.Timestamp.now() })
+      }
     }
   }
 }

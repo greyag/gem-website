@@ -4,87 +4,101 @@ import { withAuthorization, AuthUserContext } from '../Session'
 import { Table, Button, Form, Modal } from 'react-bootstrap'
 import { PLENARY } from '../../constants/plenary'
 import { withFirebase } from '../../server/Firebase'
-import * as ROLES from '../../constants/roles'
-import { ROOMS } from '../../constants/rooms'
 import ZoomLink from '../ZoomLink'
 import SlackLink from '../SlackLink'
+import VideoLink from '../VideoLink'
 import { AiOutlineCloudUpload, AiOutlineCloudDownload } from 'react-icons/ai'
 
 const Plenary = (props) => {
   const blocks = Object.keys(PLENARY)
-
   return (
     <div>
-      <AuthUserContext.Consumer>
-        {(authUser) => {
-          let isHost = authUser && authUser.roles.HOST === ROLES.HOST
-          return (
-            <div>
-              <h1>Plenary Sessions</h1>
-              <h3>{blocks.date}</h3>
-              <Table bordered hover size='lg'>
-                <tbody>
-                  {blocks.map((block) => (
-                    <Block
-                      block={block}
-                      isHost={isHost}
-                      firebase={props.firebase}
-                      key={block}
-                    />
-                  ))}
-                </tbody>
-              </Table>
-            </div>
-          )
-        }}
-      </AuthUserContext.Consumer>
+      <h1>Plenary Sessions</h1>
+      <h3>{blocks.date}</h3>
+      <Table bordered hover size='lg'>
+        <tbody>
+          {blocks.map((block, ind) => (
+            <Block
+              block={block}
+              firebase={props.firebase}
+              key={block}
+              ind={ind + 1}
+            />
+          ))}
+        </tbody>
+      </Table>
+      <a
+        href='https://drive.google.com/file/d/1-Z2vYK5VbQTfsSI_4tA3NA84sa8NVsma/view'
+        target='_blank'
+        rel='noopener noreferrer'
+        title='Mental health resources'
+      >
+        Mental Health Awareness in these troubled times: List of Resources
+      </a>
     </div>
   )
 }
 
-const Block = ({ block, isHost, firebase, ...props }) => {
+const Block = ({ block, firebase, ind, ...props }) => {
   const blockObj = PLENARY[block]
   const presentations = blockObj.presentations
     ? Object.keys(blockObj.presentations)
     : []
 
   const fbPresentations = useTalks('plenary', block, firebase)
-  console.log(fbPresentations)
+
+  const zooms = useZooms(firebase)
 
   let body = presentations.map((pres, i) =>
     i === 0 ? (
       <tr key={i}>
-        <td rowspan={presentations.length}>
+        <td rowSpan={presentations.length} width='300px'>
           <strong>{blockObj.date}</strong>
           <br />
-          <strong>{blockObj.time + ' ET'}</strong>
+          <strong>{blockObj.time + ' EDT or GMT - 4'}</strong>
           <br />
           Hosted by: {blockObj.hosts.join(', ')}
           <br />
           Moderated by: {blockObj.moderators.join(', ')}
           <div>
-            <ZoomLink url={ROOMS.room1} />
-            <SlackLink url={blockObj.slack} />
+            <h3 className={'left'}>
+              {blockObj.done ? (
+                <VideoLink url='/plenary/video' />
+              ) : (
+                <ZoomLink url={zooms['plen' + ind]} />
+              )}
+              <SlackLink url={blockObj.slack} />
+            </h3>
           </div>
         </td>
         <td>
           <strong>{blockObj.presentations[pres].title}: </strong>{' '}
           {blockObj.presentations[pres].host}
         </td>
-        {isHost && (
-          <td>
-            <UploadButton
-              presentation={blockObj.presentations[pres]}
-              block={block}
-              firebase={firebase}
-            />
-          </td>
-        )}
+
         <td>
-          {fbPresentations[blockObj.presentations[pres].title] && (
-            <DownloadButton
-              url={fbPresentations[blockObj.presentations[pres].title].url}
-            />
+          <UploadButton
+            presentation={blockObj.presentations[pres]}
+            block={block}
+            firebase={firebase}
+          />
+        </td>
+
+        <td>
+          {fbPresentations[
+            blockObj.presentations[pres].title +
+              blockObj.presentations[pres].host
+          ] && (
+            <div>
+              <DownloadButton
+                url={
+                  fbPresentations[
+                    blockObj.presentations[pres].title +
+                      blockObj.presentations[pres].host
+                  ].url
+                }
+              />
+            </div>
           )}
         </td>
       </tr>
@@ -93,21 +107,55 @@ const Block = ({ block, isHost, firebase, ...props }) => {
         <td>
           <strong>{blockObj.presentations[pres].title}: </strong>{' '}
           {blockObj.presentations[pres].host}
+          {blockObj.presentations[pres].title.includes('Mental') && (
+            <div>
+              <b />
+              <a
+                href='https://drive.google.com/file/d/1-Z2vYK5VbQTfsSI_4tA3NA84sa8NVsma/view'
+                target='_blank'
+                rel='noopener noreferrer'
+                title='Mental health resources'
+              >
+                List of Resources
+              </a>{' '}
+            </div>
+          )}
         </td>
-        {/* if is host, have upload */}
-        {isHost && (
-          <td>
+        <td>
+          {fbPresentations[
+            blockObj.presentations[pres].title +
+              blockObj.presentations[pres].host
+          ] ? (
+            <UploadButton
+              presentation={
+                fbPresentations[
+                  blockObj.presentations[pres].title +
+                    blockObj.presentations[pres].host
+                ]
+              }
+              block={block}
+              firebase={firebase}
+            />
+          ) : (
             <UploadButton
               presentation={blockObj.presentations[pres]}
               block={block}
               firebase={firebase}
             />
-          </td>
-        )}
+          )}
+        </td>
         <td>
-          {fbPresentations[blockObj.presentations[pres].title] && (
+          {fbPresentations[
+            blockObj.presentations[pres].title +
+              blockObj.presentations[pres].host
+          ] && (
             <DownloadButton
-              url={fbPresentations[blockObj.presentations[pres].title].url}
+              url={
+                fbPresentations[
+                  blockObj.presentations[pres].title +
+                    blockObj.presentations[pres].host
+                ].url
+              }
             />
           )}
         </td>
@@ -124,7 +172,10 @@ const useTalks = (splinterGroup, block, firebase) => {
       .onSnapshot((snapshot) => {
         const newTalks = {}
         snapshot.docs.forEach((doc) => {
-          newTalks[doc.data().title] = { ...doc.data(), id: doc.id }
+          newTalks[doc.data().title + doc.data().host] = {
+            ...doc.data(),
+            id: doc.id,
+          }
         })
         setTalks(newTalks)
       })
@@ -132,6 +183,24 @@ const useTalks = (splinterGroup, block, firebase) => {
   }, [])
 
   return talks
+}
+
+const useZooms = (firebase) => {
+  const [zooms, setZooms] = useState({})
+  useEffect(() => {
+    let newZooms = {}
+    const unsubscribe = firebase.db
+      .ref(`/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Zooms/`)
+      .on('value', (snapshot) => {
+        let data = snapshot.val()
+        Object.keys(data).map((room) => {
+          newZooms[data[room].room] = data[room]
+        })
+        setZooms(newZooms)
+      })
+    return unsubscribe
+  }, [firebase])
+  return zooms
 }
 
 const DownloadButton = ({ url, ...props }) => {
@@ -176,9 +245,19 @@ const UploadButton = ({ presentation, firebase, block, ...props }) => {
         <Modal.Body>
           <Form
             onSubmit={(e) => {
+              let id = null
+              if (presentation.id) {
+                id = presentation.id
+              }
               e.preventDefault()
               console.log('Submitted!')
-              firebase.postTalk(presentation, slides, slides.title, block)
+              firebase.postTalk(
+                'plenary',
+                presentation,
+                slides,
+                slides.title,
+                block
+              )
               setShowModal(false)
             }}
           >

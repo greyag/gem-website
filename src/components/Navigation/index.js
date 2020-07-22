@@ -44,7 +44,20 @@ const NavigationAuth = ({ authUser }) => (
       <NavLink href={ROUTES.PLENARY}>Plenary Sessions</NavLink>
       <NavLink href={ROUTES.DISCUSSION}>Decadal Discussion</NavLink>
       <NavLink href={ROUTES.STUDENTSCHEDULE}>Student Day</NavLink>
-      <NavLink href={'/posters'}>Posters</NavLink>
+      <NavDropdown title='Posters'>
+        <NavDropdown.Item key={'Information'} href='/posters/posterInfo'>
+          Information
+        </NavDropdown.Item>
+        <NavDropdown.Item key={'Tuesday'} href={`/posters/day/tuesday`}>
+          Tuesday
+        </NavDropdown.Item>
+        <NavDropdown.Item key={'Thursday'} href={`/posters/day/thursday`}>
+          Thursday
+        </NavDropdown.Item>
+        <NavDropdown.Item key={'All'} href={`/posters/`}>
+          All
+        </NavDropdown.Item>
+      </NavDropdown>
       <NavLink href={ROUTES.SLACK}>Slack</NavLink>
       <SignOutButton />
     </Nav>
@@ -91,7 +104,17 @@ const NavigationNonAuth = () => (
       <NavLink href={ROUTES.PLENARY}>Plenary Sessions</NavLink>
       <NavLink href={ROUTES.DISCUSSION}>Decadal Discussion</NavLink>
       <NavLink href={ROUTES.STUDENTSCHEDULE}>Student Day</NavLink>
-      <NavLink href={'/posters'}>Posters</NavLink>
+      <NavDropdown title='Posters'>
+        <NavDropdown.Item key={'Information'} href={`${ROUTES.POSTERS}`}>
+          Information
+        </NavDropdown.Item>
+        <NavDropdown.Item key={'Tuesday'} href={`/posters/day/tuesday`}>
+          Tuesday
+        </NavDropdown.Item>
+        <NavDropdown.Item key={'Thursday'} href={`/posters/day/thursday`}>
+          Thursday
+        </NavDropdown.Item>
+      </NavDropdown>
       <NavLink href={ROUTES.SLACK}>Slack</NavLink>
 
       <NavLink href={ROUTES.SIGN_IN} as='button'>

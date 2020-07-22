@@ -1,20 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { compose } from 'recompose'
 import { withAuthorization } from '../Session'
+import { withFirebase } from '../../server/Firebase'
 import { Link } from 'react-router-dom'
 //import * as ROLES from '../../constants/roles'
 import { BLOCKS } from '../../constants/blocks'
-import { ROOMS } from '../../constants/rooms'
 import { GROUPS } from '../../constants/splinterGroups'
 import { Table } from 'react-bootstrap'
 import * as ROUTES from '../../constants/routes'
 import SlackLink from '../SlackLink'
 import ZoomLink from '../ZoomLink'
+import { PLENARY } from '../../constants/plenary'
 
 // import { Link, withRouter } from 'react-router-dom'
 // import { CardBody } from 'react-bootstrap/Card'
 
-const Schedule = () => {
+const useZooms = (firebase) => {
+  const [zooms, setZooms] = useState({})
+  useEffect(() => {
+    let newZooms = {}
+    const unsubscribe = firebase.db
+      .ref(`/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Zooms/`)
+      .on('value', (snapshot) => {
+        let data = snapshot.val()
+        Object.keys(data).map((room) => {
+          newZooms[data[room].room] = data[room]
+        })
+        setZooms(newZooms)
+      })
+    return unsubscribe
+  }, [firebase])
+  return zooms
+}
+
+const Schedule = (props) => {
   let monday = [BLOCKS['monAM']]
   let tuesday = [
     BLOCKS['tuesAM'],
@@ -33,8 +52,11 @@ const Schedule = () => {
     BLOCKS['thursAft'],
     BLOCKS['thursEve'],
     BLOCKS['thursPM'],
+    BLOCKS['thursPPM'],
   ]
   let days = [monday, tuesday, wednesday, thursday]
+
+  const zooms = useZooms(props.firebase)
 
   return (
     <div>
@@ -62,22 +84,21 @@ const Schedule = () => {
       </p>
       <div>
         {days.map((blocks, ind) => (
-          <Day blocks={blocks} key={ind} />
+          <Day blocks={blocks} key={ind} zooms={zooms} />
         ))}
       </div>
     </div>
   )
 }
-const Day = ({ blocks }) => {
+const Day = ({ blocks, zooms, ...props }) => {
   const makeTable = (blocks) => {
     let head = (
       <thead>
         <tr>
-          <th style={{ width: 180 }}>Time (Eastern Time)</th>
+          <th style={{ width: 180 }}>Time (EDT or GMT - 4)</th>
           <th></th>
-          {!blocks[0].date.includes('Monday') && (
-            <th style={{ width: 100 }}></th>
-          )}
+
+          <th style={{ width: 100 }}></th>
         </tr>
       </thead>
     )
@@ -102,28 +123,47 @@ const Day = ({ blocks }) => {
                 <a href={ROUTES.DISCUSSION}>{block.name}</a>
               </strong>
             </td>
+          ) : block.name.includes('Poster') ? (
+            <td>
+              <strong>
+                <a href={block.link}>{block.name}</a>
+              </strong>
+            </td>
           ) : (
             <td>
               <strong>{block.name}</strong>
             </td>
           )}
-          {!block.name.includes('Student') && (
-            <td>
-              {(block.name.includes('Plenary') ||
-                block.name.includes('Discussion')) && (
-                <div>
-                  <ZoomLink url={ROOMS[block.rooms[0]]} key={block.name} />
-                  <SlackLink url={block.slack} />
-                </div>
-              )}
-            </td>
-          )}
+          <td width='120px'>
+            {/* {block.name.includes('Plenary') && (
+              <div>
+                <ZoomLink url={PLENARY[block.day].zoom} key={block.name} />
+                <SlackLink url={block.slack} />
+              </div>
+            )} */}
+            {(block.name.includes('Plenary') ||
+              block.name.includes('Discussion') ||
+              block.name.includes('Student')) && (
+              <div>
+                <ZoomLink url={zooms[block.rooms[0]]} key={block.name} />
+                <SlackLink url={block.slack} />
+              </div>
+            )}
+
+            {block.name.includes('Memorial') && (
+              <div>
+                <ZoomLink url={zooms[block.rooms[0]]} key={block.name} />
+                <SlackLink url={block.slack} />
+              </div>
+            )}
+          </td>
         </tr>
       )
       block.groups.forEach((group, ind) => {
         if (
           !block.name.includes('Plenary') &&
-          !block.name.includes('Student')
+          !block.name.includes('Student') &&
+          !block.name.includes('Sam')
         ) {
           body.push(
             <tr key={block.name + group + ind}>
@@ -147,7 +187,7 @@ const Day = ({ blocks }) => {
                 )}
               </td>
               <td>
-                <ZoomLink url={ROOMS[block.rooms[ind]]} />
+                <ZoomLink url={zooms[block.rooms[ind]]} />
                 {GROUPS[group] ? (
                   <SlackLink url={GROUPS[group].slack} />
                 ) : (
@@ -188,4 +228,4 @@ const Day = ({ blocks }) => {
 
 const condition = (authUser) => !!authUser
 
-export default compose(withAuthorization(condition))(Schedule)
+export default compose(withAuthorization(condition), withFirebase)(Schedule)

@@ -2,16 +2,14 @@ import React from 'react'
 import { AuthUserContext } from '../Session'
 import * as ROLES from '../../constants/roles'
 import { GROUPS } from '../../constants/splinterGroups'
-import {
-  OneBlockComponentHost,
-  OneBlockComponentAttendee,
-} from './OneBlockComponents'
+import OneBlockComponent from './OneBlockComponents'
 
 const AllBlocksComponent = ({
   //talkObj = {},
   removeTalk,
   moveTalk,
   splinterGroup,
+  zooms,
 }) => {
   let blocks = GROUPS[splinterGroup]
     ? [...GROUPS[splinterGroup].blocks, 'unscheduled']
@@ -23,19 +21,15 @@ const AllBlocksComponent = ({
           <div key={block}>
             <AuthUserContext.Consumer>
               {(authUser) => {
-                return authUser && authUser.roles.HOST === ROLES.HOST ? (
-                  <OneBlockComponentHost
+                let isHost = authUser && authUser.roles.HOST === ROLES.HOST
+                return (
+                  <OneBlockComponent
                     block={block}
                     removeTalk={(talkId) => removeTalk(block, talkId)}
                     moveTalk={moveTalk}
                     blocks={blocks}
                     splinterGroup={splinterGroup}
-                  />
-                ) : (
-                  <OneBlockComponentAttendee
-                    block={block}
-                    //talks={talkObj[block]}
-                    splinterGroup={splinterGroup}
+                    isHost={isHost}
                   />
                 )
               }}

@@ -2,65 +2,200 @@ import React, { useState, useEffect } from 'react'
 import { compose } from 'recompose'
 import { Button, Table, Form, Modal } from 'react-bootstrap'
 import { withFirebase } from '../../server/Firebase'
-
-import { posterSched } from '../../constants/posterSched'
-import { AiOutlineCloudUpload, AiOutlineCloudDownload } from 'react-icons/ai'
+import { withAuthorization } from '../Session/'
+import { posterSched } from '../../constants/posterSched.js'
+import ZoomLink from '../ZoomLink'
+import SlackLink from '../SlackLink'
+//import posterOrder from '../../constants/posterOrder'
+import {
+  AiOutlineCloudUpload,
+  AiOutlineCloudDownload,
+  AiOutlineProject,
+  AiOutlineVideoCamera,
+} from 'react-icons/ai'
 
 const usePosters = (researchArea, firebase) => {
-  const [posters, setPosters] = useState([])
+  const [posters, setPosters] = useState({})
   useEffect(() => {
+    let newPosters = {}
     const unsubscribe = firebase.fs
       .collection(`/posters/`)
       .where('researchArea', '==', researchArea)
-      .orderBy('posterId')
       .onSnapshot((snapshot) => {
-        const newPosters = snapshot.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id }
+        snapshot.docs.map((doc) => {
+          newPosters[doc.id] = { ...doc.data() }
         })
         setPosters(newPosters)
       })
     return unsubscribe
-  }, [])
+  }, [firebase, researchArea])
   return posters
 }
 
+const usePostersDB = (researchArea, firebase) => {
+  const [posters, setPosters] = useState([])
+  useEffect(() => {
+    let newPosters = {}
+    const unsubscribe = firebase.db
+      .ref('/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Schedule')
+      .orderByChild('researchArea')
+      .equalTo(researchArea)
+      .on('value', (snapshot) => {
+        let posters = snapshot.val()
+        newPosters = Object.keys(posters).map((posterId) => posters[posterId])
+        // snapshot.docs.map((doc) => {
+        //   newPosters[doc.id] = { ...doc.data()}
+        // })
+        setPosters(newPosters)
+      })
+    return unsubscribe
+  }, [firebase, researchArea])
+  return posters
+}
+
+const useHostsDB = (researchArea, firebase) => {
+  const [hosts, setHosts] = useState([])
+  useEffect(() => {
+    let newHosts = {}
+    const unsubscribe = firebase.db
+      .ref(
+        `/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Hosts/${researchArea}`
+      )
+      .on('value', (snapshot) => {
+        newHosts = snapshot.val()
+        // snapshot.docs.map((doc) => {
+        //   newPosters[doc.id] = { ...doc.data()}
+        // })
+        setHosts([newHosts.host1, newHosts.host2])
+      })
+    return unsubscribe
+  }, [firebase, researchArea])
+  return hosts
+}
+
+const useZooms = (firebase) => {
+  const [zooms, setZooms] = useState({})
+  useEffect(() => {
+    let newZooms = {}
+    const unsubscribe = firebase.db
+      .ref(`/1iQK8lA6Ubi9MvxCLl0LbTMmNmydPQ86bMbVLs1hzeJ0/Zooms/`)
+      .on('value', (snapshot) => {
+        let data = snapshot.val()
+        Object.keys(data).map((room) => {
+          newZooms[data[room].room] = data[room]
+        })
+        setZooms(newZooms)
+      })
+    return unsubscribe
+  }, [firebase])
+  return zooms
+}
+
 const Posters = (props) => {
+  // let posterOr = { tuesday: {}, thursday: {} }
+  // for (let poster of posterOrder) {
+  //   posterOr[poster.day == '1' ? 'tuesday' : 'thursday'][poster.researchArea]
+  //     ? posterOr[poster.day == '1' ? 'tuesday' : 'thursday'][
+  //         poster.researchArea
+  //       ].push(poster)
+  //     : (posterOr[poster.day == '1' ? 'tuesday' : 'thursday'][
+  //         poster.researchArea
+  //       ] = [poster])
+  // }
+
+  // console.log(posterOr)
+  // let posterById2 = {}
+  // let posterById1 = {}
+
+  // for (let day of Object.keys(posterSched)) {
+  //   for (let rA of Object.keys(posterSched[day])) {
+  //     for (let poster of posterSched[day][rA]) {
+  //       console.log(day, rA, poster)
+  //       posterById1[poster.posterId] = poster
+  //     }
+  //   }
+  // }
+  // console.log(posterById1)
+  // for (let poster of posterOrder) {
+  //   posterById2[poster.id] = poster
+  // }
+  // for (let poster of posterSched.tuesday.append(posterSched.thursday)) {
+  //   posterById1[poster.id] = poster
+  // }
+  //compare
+  // for (let id of Object.keys(posterById1)) {
+  //   if (!posterById2[id]) {
+  //     console.log('not in second batch', posterById1[id])
+  //   } else if (posterById1[id].title !== posterById2[id].title) {
+  //   } else {
+  //     console.log(posterById1[id], posterById2[id])
+  //   }
+  // }
+
+  // let hostObj = {}
+  // for (let area of hostArr) {
+  //   hostObj[area.researchArea] = [area.host1, area.host2]
+  // }
+  // console.log(hostObj)
+
   return (
     <div>
       <h1>Posters</h1>
       <h2>Find your name on the list and upload your files</h2>
       {Object.keys(posterSched).map((dayName) => (
-        <Day dayObj={posterSched[dayName]} dayName={dayName} key={dayName} />
+        <DayFB dayObj={posterSched[dayName]} dayName={dayName} key={dayName} />
       ))}
     </div>
   )
 }
 
 const Day = ({ dayObj, dayName, ...props }) => {
+  let zooms = useZooms(props.firebase)
+
+  zooms = [
+    zooms['room5'],
+    zooms['room6'],
+    zooms['room7'],
+    zooms['room8'],
+    zooms['room9'],
+    zooms['room10'],
+    zooms['room11'],
+    zooms['room12'],
+  ]
+
   return (
     <div>
       {dayName === 'tuesday' ? (
-        <h4>Tuesday, July 21st, 5-7pm ET</h4>
+        <h4>Tuesday, July 21st, 5:00-7:00pm EDT or GMT - 4</h4>
       ) : (
-        <h4>Thursday, July 23rd, 5-7pm ET</h4>
+        <h4>Thursday, July 23rd, 5:00-7:00pm EDT or GMT - 4</h4>
       )}
-      {Object.keys(dayObj).map((researchArea) => (
+      {Object.keys(dayObj).map((researchArea, ind) => (
         <ResearchArea
           posters={dayObj[researchArea]}
           researchArea={researchArea}
           key={researchArea}
+          zoom={zooms[ind]}
         />
       ))}
     </div>
   )
 }
 
-const ResearchAreaPre = ({ posters, researchArea, ...props }) => {
+const ResearchAreaPre = ({ researchArea, zoom, ...props }) => {
   let fbPosters = usePosters(researchArea, props.firebase)
-  console.log(researchArea, fbPosters)
+  let dbPosters = usePostersDB(researchArea, props.firebase)
+  let hosts = useHostsDB(researchArea, props.firebase)
+
   return (
     <div>
-      <h6>{researchArea}</h6>
+      <h4 className={'left'}>
+        <strong>{researchArea} </strong>
+        {'  '}
+        <ZoomLink url={zoom} />
+        <SlackLink url={'gemworkshop.slack.com/messages/0-poster'} />
+      </h4>
+      <h5 className={'left'}>Hosted by: {hosts.join(', ')}</h5>
       <Table>
         <thead>
           <tr>
@@ -68,27 +203,60 @@ const ResearchAreaPre = ({ posters, researchArea, ...props }) => {
             <th>Title</th>
             <th></th>
             <th></th>
-            <th></th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
-          {posters.map((poster, ind) => (
+          {dbPosters.map((poster, ind) => (
             <tr key={ind}>
               <td>
                 {poster.firstName} {poster.lastName}
               </td>
-              <td>{poster.title}</td>
+              <td>
+                <a href={`/posters/${poster.posterId}`}>{poster.title}</a>
+              </td>
               <td>
                 <UploadButton
                   firebase={props.firebase}
-                  poster={poster}
+                  poster={
+                    fbPosters[poster.posterId]
+                      ? fbPosters[poster.posterId]
+                      : poster
+                  }
                   researchArea={researchArea}
                 />
               </td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>
+                {fbPosters[poster.posterId] &&
+                fbPosters[poster.posterId].posterUrl ? (
+                  <AiOutlineProject
+                    size='30'
+                    color='green'
+                    title='Upload Completed'
+                  />
+                ) : (
+                  <AiOutlineProject
+                    size='30'
+                    color='#F1948A'
+                    title='No Poster'
+                  />
+                )}
+              </td>
+              <td>
+                {fbPosters[poster.posterId] &&
+                fbPosters[poster.posterId].mediaURL ? (
+                  <AiOutlineVideoCamera
+                    size='30'
+                    color='green'
+                    title='Upload Completed'
+                  />
+                ) : (
+                  <AiOutlineVideoCamera
+                    size='30'
+                    color='#F1948A'
+                    title='No Video'
+                  />
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -113,6 +281,7 @@ const UploadButton = ({ researchArea, poster, firebase, ...props }) => {
         centered
         backdrop={true}
         onHide={handleToggle}
+        title='Upload'
       >
         <Modal.Header closeButton>
           <Modal.Title id='contained-modal-title-vcenter'>
@@ -126,13 +295,7 @@ const UploadButton = ({ researchArea, poster, firebase, ...props }) => {
               console.log('Submitted!')
               firebase.uploadPoster(posterFile, poster.posterId, poster, true)
               videoFile &&
-                firebase.uploadPoster(
-                  videoFile,
-                  researchArea,
-                  poster.posterId,
-                  poster,
-                  false
-                )
+                firebase.uploadPoster(videoFile, poster.posterId, poster, false)
               setShowModal(false)
             }}
           >
@@ -148,14 +311,20 @@ const UploadButton = ({ researchArea, poster, firebase, ...props }) => {
             <Form.Group>
               <Form.File
                 id='posterFile'
-                label='Please upload your poster or slides.'
+                label='Your Poster. (must be a PDF)'
                 onChange={(e) => setPosterFile(e.target.files[0])}
+                accept='application/pdf'
               />
             </Form.Group>
+            <Form.Text>
+              Please upload your optional, but recommended, video. If you have
+              audio, please make it a video by playing it on top of an image of
+              your poster.
+            </Form.Text>
             <Form.Group>
               <Form.File
-                id='vidoFile'
-                label='Please upload your optional, but recommended, video. If you have audio, please make it a video by playing it on top of an image of your poster.'
+                id='videoFile'
+                label='Your Video'
                 onChange={(e) => setVideoFile(e.target.files[0])}
               />
             </Form.Group>
@@ -166,7 +335,7 @@ const UploadButton = ({ researchArea, poster, firebase, ...props }) => {
             <Button
               variant='primary'
               type='submit'
-              disabled={!(verify && !!posterFile)}
+              disabled={!(verify && (!!posterFile || !!videoFile))}
             >
               Submit
             </Button>
@@ -177,5 +346,18 @@ const UploadButton = ({ researchArea, poster, firebase, ...props }) => {
   )
 }
 
+const PostersDayPre = (props) => {
+  let myId = props.match.params.dayId
+  return <DayFB dayName={myId} dayObj={posterSched[myId]} />
+}
+
 const ResearchArea = compose(withFirebase)(ResearchAreaPre)
-export default Posters
+
+const condition = (authUser) => !!authUser
+
+const DayFB = compose(withFirebase)(Day)
+
+const PostersDay = compose(withAuthorization(condition))(PostersDayPre)
+export { PostersDay }
+
+export default compose(withAuthorization(condition))(Posters)

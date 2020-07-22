@@ -2,7 +2,8 @@ export const GROUPS = {
   IEMIT: {
     longName:
       '3D Ionospheric Electrodynamics and its Impact on MIT Coupling (IEMIT)',
-    hosts: 'Hyunju Connor, Dogacan Ozturk, Gang Lu, Bin Zhang',
+    hosts:
+      'Hyunju Connor, Dogacan Ozturk, Gang Lu, Bin Zhang, Daniel Welling, Agnit Mukhopadhyay, Dillon Gillespie, Jaewoong Jung, and Katherine Garcia-Sage',
     blocks: ['tuesAft', 'tuesEve', 'wedEve'],
     slack: 'gemworkshop.slack.com/messages/ionospheric-electrodynamics-iemit',
   },
@@ -15,7 +16,7 @@ export const GROUPS = {
   },
   IHMIC: {
     longName: 'Interhemispheric Approaches to Understand M-I Coupling (IHMIC)',
-    hosts: 'Hyomin Kim, Robert Lysak, Tomoko Matsuo',
+    hosts: 'Hyomin Kim, Robert Lysak, Tomoko Matsuo, Daniel Welling',
     blocks: ['thursAft', 'thursEve'],
     slack: 'gemworkshop.slack.com/messages/interhemispheric-ihmic',
   },
