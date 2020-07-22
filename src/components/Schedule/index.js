@@ -10,7 +10,9 @@ import { Table } from 'react-bootstrap'
 import * as ROUTES from '../../constants/routes'
 import SlackLink from '../SlackLink'
 import ZoomLink from '../ZoomLink'
+import videoUrls from '../../constants/vidUrls'
 import { PLENARY } from '../../constants/plenary'
+import VideoLink from '../VideoLink'
 
 // import { Link, withRouter } from 'react-router-dom'
 // import { CardBody } from 'react-bootstrap/Card'
@@ -135,24 +137,48 @@ const Day = ({ blocks, zooms, ...props }) => {
             </td>
           )}
           <td width='120px'>
-            {/* {block.name.includes('Plenary') && (
-              <div>
-                <ZoomLink url={PLENARY[block.day].zoom} key={block.name} />
-                <SlackLink url={block.slack} />
-              </div>
-            )} */}
             {(block.name.includes('Plenary') ||
               block.name.includes('Discussion') ||
               block.name.includes('Student')) && (
               <div>
-                <ZoomLink url={zooms[block.rooms[0]]} key={block.name} />
-                <SlackLink url={block.slack} />
+                {block.done ? (
+                  <h3>
+                    {videoUrls[
+                      block.name.includes('Plenary')
+                        ? 'plenary'
+                        : block.name.includes('Discussion')
+                        ? 'discussion'
+                        : 'student'
+                    ] && (
+                      <VideoLink
+                        url={
+                          videoUrls[
+                            block.name.includes('Plenary')
+                              ? 'plenary'
+                              : block.name.includes('Discussion')
+                              ? 'discussion'
+                              : 'student'
+                          ]
+                        }
+                      />
+                    )}
+                    <SlackLink url={block.slack} />
+                  </h3>
+                ) : (
+                  <span>
+                    {!block.done && (
+                      <ZoomLink url={zooms[block.rooms[0]]} key={block.name} />
+                    )}
+                    <SlackLink url={block.slack} />
+                  </span>
+                )}
               </div>
             )}
-
             {block.name.includes('Memorial') && (
               <div>
-                <ZoomLink url={zooms[block.rooms[0]]} key={block.name} />
+                {!block.done && (
+                  <ZoomLink url={zooms[block.rooms[0]]} key={block.name} />
+                )}
                 <SlackLink url={block.slack} />
               </div>
             )}
@@ -187,19 +213,33 @@ const Day = ({ blocks, zooms, ...props }) => {
                 )}
               </td>
               <td>
-                <ZoomLink url={zooms[block.rooms[ind]]} />
-                {GROUPS[group] ? (
-                  <SlackLink url={GROUPS[group].slack} />
+                {!block.done ? (
+                  <div>
+                    <ZoomLink url={zooms[block.rooms[ind]]} />
+                    {GROUPS[group] ? (
+                      <SlackLink url={GROUPS[group].slack} />
+                    ) : (
+                      <SlackLink
+                        url={GROUPS[group[0]].slack}
+                        key={block.name + group + ind}
+                      />
+                    )}
+                  </div>
                 ) : (
-                  <SlackLink
-                    url={GROUPS[group[0]].slack}
-                    key={block.name + group + ind}
-                  />
+                  <h3>
+                    {GROUPS[group] ? (
+                      <SlackLink url={GROUPS[group].slack} />
+                    ) : (
+                      <SlackLink
+                        url={GROUPS[group[0]].slack}
+                        key={block.name + group + ind}
+                      />
+                    )}
+                  </h3>
                 )}
               </td>
             </tr>
           )
-        } else if (true) {
         }
       })
     })

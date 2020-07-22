@@ -7,6 +7,8 @@ export const BLOCKS = {
     date: 'Monday, July 20',
     name: 'Student Session',
     slack: 'gemworkshop.slack.com/messages/0-student',
+    done: true,
+    vidUrls: ['/student/video'],
   },
   tuesAM: {
     order: 4,
@@ -17,6 +19,8 @@ export const BLOCKS = {
     slack: 'gemworkshop.slack.com/messages/1-plenary-tuesday',
     day: 'tuesday',
     rooms: ['plen1'],
+    done: true,
+    vidUrls: ['/plenary/video'],
   },
   tuesAft: {
     order: 5,
@@ -25,6 +29,7 @@ export const BLOCKS = {
     time: '1:00pm-2:30pm',
     name: 'Tuesday Concurrent Session 1',
     date: 'Tuesday, July 21',
+    done: true,
   },
   tuesEve: {
     order: 6,
@@ -33,6 +38,7 @@ export const BLOCKS = {
     time: '3:00pm-4:30pm',
     name: 'Tuesday Concurrent Session 2',
     date: 'Tuesday, July 21',
+    done: true,
   },
   tuesPM: {
     order: 7,
@@ -53,6 +59,7 @@ export const BLOCKS = {
     slack: 'gemworkshop.slack.com/messages/1-plenary-wednesday',
     day: 'wednesday',
     rooms: ['plen2'],
+    done: true,
   },
   wedAft: {
     order: 8,
@@ -61,6 +68,7 @@ export const BLOCKS = {
     time: '1:00pm-2:30pm',
     name: 'Wednesday Concurrent Session 1',
     date: 'Wednesday, July 22',
+    done: true,
   },
   wedEve: {
     order: 9,
@@ -70,6 +78,7 @@ export const BLOCKS = {
     name: 'Wednesday Concurrent Session 2',
     date: 'Wednesday, July 22',
     slack: 'gemworkshop.slack.com/messages/0-decadal-future-and-beyond',
+    done: false,
   },
   wedPM: {
     order: 7,
@@ -78,6 +87,7 @@ export const BLOCKS = {
     time: '5:00pm-7:00pm',
     name: 'Discussion: Decadal Future and Beyond!',
     date: 'Wednesday, July 22',
+    done: false,
   },
 
   thursAM: {
@@ -89,6 +99,7 @@ export const BLOCKS = {
     slack: 'gemworkshop.slack.com/messages/1-plenary-thursday',
     day: 'thursday',
     rooms: ['plen3'],
+    done: false,
   },
   thursAft: {
     order: 11,
@@ -97,6 +108,7 @@ export const BLOCKS = {
     time: '1:00pm-2:30pm',
     name: 'Thursday Concurrent Session 1',
     date: 'Thursday, July 23',
+    done: false,
   },
   thursEve: {
     order: 12,
@@ -105,6 +117,7 @@ export const BLOCKS = {
     time: '3:00pm-4:30pm',
     name: 'Thursday Concurrent Session 2',
     date: 'Thursday, July 23',
+    done: false,
   },
   thursPM: {
     order: 7,
@@ -114,6 +127,7 @@ export const BLOCKS = {
     name: 'Poster Session 2',
     date: 'Thursday, July 23',
     link: '/posters/day/thursday',
+    done: false,
   },
   thursPPM: {
     groups: ['Sam Bingham Memorial'],
@@ -121,5 +135,6 @@ export const BLOCKS = {
     time: '7:00pm-9:00pm',
     name: 'Sam Bingham Memorial',
     slack: 'gemworkshop.slack.com/messages/0-support-each-other',
+    done: false,
   },
 }
